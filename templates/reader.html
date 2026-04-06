@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Feed Reader - FeedHub</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; }
+
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 80px;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .logo { font-size: 32px; font-weight: 700; color: #e05c2a; text-decoration: none; }
+    .logo span { color: #1a1a2e; }
+    .nav-links { list-style: none; display: flex; gap: 36px; }
+    .nav-links a { text-decoration: none; color: #444; font-size: 20px; }
+    .nav-links a:hover { color: #e05c2a; }
+    .nav-right { display: flex; gap: 14px; align-items: center; }
+    .btn-dash {
+      padding: 12px 26px;
+      border: 2px solid #e05c2a;
+      background: transparent;
+      color: #e05c2a;
+      border-radius: 8px;
+      font-size: 17px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-logout {
+      padding: 12px 26px;
+      border: none;
+      background: #e05c2a;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 17px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, #e05c2a 0%, #f0845a 100%);
+      padding: 60px 80px;
+      color: #fff;
+    }
+    .page-header h1 { font-size: 50px; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { font-size: 22px; opacity: 0.9; }
+
+    .reader-content {
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 0 40px;
+    }
+
+    .empty-state {
+      background: #fff;
+      border: 2px dashed #e5e7eb;
+      border-radius: 16px;
+      padding: 80px;
+      text-align: center;
+    }
+    .empty-state .icon { font-size: 80px; margin-bottom: 24px; }
+    .empty-state h2 { font-size: 32px; font-weight: 700; color: #1a1a2e; margin-bottom: 12px; }
+    .empty-state p { font-size: 20px; color: #888; margin-bottom: 28px; }
+    .btn-browse {
+      padding: 16px 36px;
+      background: #e05c2a;
+      color: #fff;
+      border-radius: 10px;
+      font-size: 18px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-browse:hover { background: #c44d20; }
+
+    .articles-count {
+      font-size: 20px;
+      color: #888;
+      margin-bottom: 24px;
+    }
+
+    .article-card {
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 32px 36px;
+      margin-bottom: 24px;
+      transition: all 0.2s;
+    }
+    .article-card:hover {
+      border-color: #e05c2a;
+      transform: translateY(-2px);
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .feed-badge {
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .feed-badge.blog { background: #fff0ea; color: #e05c2a; }
+    .feed-badge.rss { background: #e8f5ee; color: #1d9e75; }
+    .feed-badge.podcast { background: #f5f0ff; color: #6c3fc5; }
+    .feed-badge.youtube { background: #fff0f0; color: #cc0000; }
+
+    .feed-name {
+      font-size: 16px;
+      color: #888;
+      font-weight: 600;
+    }
+
+    .published {
+      font-size: 15px;
+      color: #aaa;
+      margin-left: auto;
+    }
+
+    .article-card h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .article-card h2 a {
+      text-decoration: none;
+      color: #1a1a2e;
+    }
+
+    .article-card h2 a:hover { color: #e05c2a; }
+
+    .article-card p {
+      font-size: 18px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .read-more {
+      color: #e05c2a;
+      text-decoration: none;
+      font-size: 17px;
+      font-weight: 600;
+    }
+    .read-more:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/" class="logo">Feed<span>Hub</span></a>
+    <ul class="nav-links">
+      <li><a href="/blogs">Blogs</a></li>
+      <li><a href="/podcasts">Podcasts</a></li>
+      <li><a href="/youtube">YouTube</a></li>
+      <li><a href="/rss">RSS</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="/dashboard" class="btn-dash">← Dashboard</a>
+      <a href="/logout" class="btn-logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <h1>📰 Your Feed Reader</h1>
+    <p>Latest articles from blogs and RSS feeds you follow</p>
+  </div>
+
+  <div class="reader-content">
+
+    {% if articles %}
+      <p class="articles-count">{{ articles|length }} articles from your followed feeds</p>
+      {% for article in articles %}
+      <div class="article-card">
+        <div class="article-meta">
+          <span class="feed-badge {{ article.feed_type }}">
+            {{ article.feed_type.upper() }}
+          </span>
+          <span class="feed-name">{{ article.feed_name }}</span>
+          <span class="published">
+            {{ article.published[:16] if article.published != 'Recent' else 'Recent' }}
+          </span>
+        </div>
+        <h2><a href="{{ article.link }}" target="_blank">{{ article.title }}</a></h2>
+        <p>{{ article.summary | striptags }}</p>
+        <a href="{{ article.link }}" target="_blank" class="read-more">
+          Read full article →
+        </a>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">
+        <div class="icon">📭</div>
+        <h2>No articles yet</h2>
+        <p>Follow some blogs or RSS feeds to see real articles here!</p>
+        <a href="/blogs" class="btn-browse">Browse Blogs</a>
+      </div>
+    {% endif %}
+
+  </div>
+
+</body>
+</html>

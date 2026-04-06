@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Feeds - FeedHub</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8;}
+
+    .navbar {
+      background: #fff;
+      border-bottom: 2px solid #e5e7eb;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .logo { font-size: 26px; font-weight: 700; color: #e05c2a; text-decoration: none; }
+    .logo span { color: #1a1a2e; }
+    .nav-links { list-style: none; display: flex; gap: 28px; }
+    .nav-links a { text-decoration: none; color: #555; font-size: 16px; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: #e05c2a; font-weight: 700; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .welcome-user {
+      font-size: 15px; color: #444; font-weight: 600;
+      background: #fff7f4; padding: 8px 14px;
+      border-radius: 20px; border: 2px solid #e05c2a;
+    }
+    .btn-nav {
+      padding: 9px 20px; border: 2px solid #e05c2a;
+      background: transparent; color: #e05c2a;
+      border-radius: 8px; font-size: 14px; cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-nav:hover { background: #fff5f0; }
+    .btn-nav.filled { background: #e05c2a; color: #fff; }
+    .btn-nav.filled:hover { background: #c44d20; }
+
+    /* PAGE HEADER */
+    .page-header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #2d3561 50%, #e05c2a 100%);
+      padding: 50px 60px;
+      color: #fff;
+    }
+    .page-header h1 { font-size: 44px; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { font-size: 20px; opacity: 0.85; }
+
+    /* STATS TABS */
+    .stats-bar {
+      display: flex;
+      background: #fff;
+      border-bottom: 2px solid #e5e7eb;
+      overflow-x: auto;
+    }
+    .stat-tab {
+      flex: 1; min-width: 100px; padding: 18px 10px;
+      text-align: center; cursor: pointer;
+      border-bottom: 4px solid transparent;
+      transition: all 0.2s;
+    }
+    .stat-tab:hover { background: #f7f8fa; }
+    .stat-tab.active { border-bottom-color: #e05c2a; background: #fff7f4; }
+    .stat-tab h3 { font-size: 28px; font-weight: 700; color: #e05c2a; margin-bottom: 2px; }
+    .stat-tab p { font-size: 13px; color: #888; }
+    .stat-tab .tab-icon { font-size: 18px; margin-bottom: 2px; }
+
+    /* MAIN LAYOUT */
+    .main-layout { display: flex; min-height: calc(100vh - 250px); }
+
+    /* SIDEBAR */
+    .left-sidebar {
+      width: 220px; min-width: 220px;
+      border-right: 2px solid #e5e7eb;
+      background: #fff; padding: 20px 0;
+    }
+    .sidebar-section-title {
+      font-size: 11px; font-weight: 700; color: #aaa;
+      text-transform: uppercase; letter-spacing: 1px;
+      padding: 0 16px 8px;
+    }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; cursor: pointer; color: #444;
+      font-size: 14px; border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .sidebar-item:hover { background: #f7f8fa; color: #e05c2a; }
+    .sidebar-item.active {
+      background: #fff7f4; color: #e05c2a;
+      border-left-color: #e05c2a; font-weight: 700;
+    }
+    .sidebar-count {
+      margin-left: auto; background: #f0f0f0; color: #666;
+      font-size: 12px; padding: 2px 8px;
+      border-radius: 12px; font-weight: 700;
+    }
+    .sidebar-item.active .sidebar-count { background: #e05c2a; color: #fff; }
+    .sidebar-divider { height: 1px; background: #f0f0f0; margin: 8px 16px; }
+
+    /* CONTENT AREA */
+    .content-area { flex: 1; padding: 28px 36px; min-width: 0; }
+
+    /* FILTER BAR */
+    .content-filter {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .content-filter input {
+      flex: 1; min-width: 220px;
+      padding: 12px 16px; border: 2px solid #ddd;
+      border-radius: 10px; font-size: 15px; outline: none;
+    }
+    .content-filter input:focus { border-color: #e05c2a; }
+    .filter-chip {
+      padding: 8px 18px; border: 2px solid #ddd;
+      border-radius: 20px; font-size: 14px;
+      cursor: pointer; color: #555;
+    }
+    .filter-chip:hover, .filter-chip.active {
+      border-color: #e05c2a; color: #e05c2a; background: #fff5f0;
+    }
+
+    /* SECTION HEADING */
+    .section-heading {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .section-heading h2 { font-size: 24px; font-weight: 700; color: #1a1a2e; }
+    .section-heading span { font-size: 14px; color: #888; }
+
+    /* FEED CARD */
+    .followed-card {
+      background: #fff; border: 2px solid #e5e7eb;
+      border-radius: 14px; padding: 20px 24px;
+      display: flex; align-items: center; gap: 18px;
+      margin-bottom: 14px; transition: all 0.2s;
+    }
+    .followed-card:hover { border-color: #e05c2a; transform: translateX(3px); }
+    .followed-av {
+      width: 60px; height: 60px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700; flex-shrink: 0;
+    }
+    .followed-info { flex: 1; min-width: 0; }
+    .followed-info h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+    .followed-info p { font-size: 14px; color: #666; margin-bottom: 6px; }
+    .feed-badge {
+      padding: 3px 10px; border-radius: 10px;
+      font-size: 12px; font-weight: 700; display: inline-block;
+    }
+    .feed-badge.blog    { background: #fff0ea; color: #e05c2a; }
+    .feed-badge.rss     { background: #e8f5ee; color: #1d9e75; }
+    .feed-badge.podcast { background: #f5f0ff; color: #6c3fc5; }
+    .feed-badge.youtube { background: #fff0f0; color: #cc0000; }
+    .cat-label { font-size: 13px; color: #aaa; margin-left: 8px; }
+
+    .btn-group { display: flex; gap: 8px; flex-shrink: 0; }
+    .btn-visit-sm {
+      padding: 10px 20px; background: #e05c2a; color: #fff;
+      border: none; border-radius: 8px; font-size: 14px;
+      cursor: pointer; font-weight: 600; text-decoration: none;
+      display: inline-block; white-space: nowrap;
+    }
+    .btn-visit-sm:hover { background: #c44d20; }
+    .btn-unfollow {
+      padding: 10px 20px; background: #fff; color: #e05c2a;
+      border: 2px solid #e05c2a; border-radius: 8px;
+      font-size: 14px; cursor: pointer; font-weight: 600; white-space: nowrap;
+    }
+    .btn-unfollow:hover { background: #fff5f0; }
+
+    /* ARTICLE CARD */
+    .article-card {
+      background: #fff; border: 2px solid #e5e7eb;
+      border-radius: 14px; padding: 22px 28px;
+      margin-bottom: 16px; transition: all 0.2s;
+    }
+    .article-card:hover { border-color: #e05c2a; box-shadow: 0 4px 16px rgba(224,92,42,0.08); }
+    .article-top {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 12px; flex-wrap: wrap;
+    }
+    .article-source { font-size: 14px; color: #888; font-weight: 700; }
+    .article-cat { font-size: 12px; color: #aaa; background: #f7f8fa; padding: 3px 10px; border-radius: 6px; }
+    .article-date { font-size: 12px; color: #bbb; margin-left: auto; }
+    .article-card h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; line-height: 1.4; }
+    .article-card h3 a { text-decoration: none; color: #1a1a2e; }
+    .article-card h3 a:hover { color: #e05c2a; }
+    .article-card p { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 12px; }
+    .read-more { color: #e05c2a; font-size: 14px; font-weight: 700; text-decoration: none; }
+    .read-more:hover { text-decoration: underline; }
+
+    /* EMPTY STATE */
+    .empty-state {
+      background: #fff; border: 2px dashed #e5e7eb;
+      border-radius: 14px; padding: 50px; text-align: center;
+    }
+    .empty-state .icon { font-size: 60px; margin-bottom: 16px; }
+    .empty-state h3 { font-size: 24px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+    .empty-state p { font-size: 16px; color: #888; margin-bottom: 22px; }
+    .btn-browse-sm {
+      padding: 12px 30px; background: #e05c2a; color: #fff;
+      border: none; border-radius: 10px; font-size: 16px;
+      cursor: pointer; text-decoration: none; display: inline-block;
+    }
+    .btn-browse-sm:hover { background: #c44d20; }
+
+    /* TOAST */
+    #toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: #1a1a2e; color: #fff;
+      padding: 14px 24px; border-radius: 12px;
+      font-size: 16px; display: none; z-index: 9999;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="/" class="logo">Feed<span>Hub</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/blogs">Blogs</a></li>
+    <li><a href="/podcasts">Podcasts</a></li>
+    <li><a href="/youtube">YouTube</a></li>
+    <li><a href="/rss">RSS Feeds</a></li>
+    <li><a href="/myfeeds" class="active">My Feeds</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="welcome-user">👤 {{ current_user.username }}</span>
+    <a href="/dashboard" class="btn-nav">Dashboard</a>
+    <a href="/logout" class="btn-nav filled">Logout</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>📚 My Feeds</h1>
+  <p>All your followed content in one place — {{ total }} feeds followed</p>
+</div>
+
+<!-- STATS TABS -->
+<div class="stats-bar">
+  <div class="stat-tab active" onclick="switchTab('all', this)">
+    <div class="tab-icon">🌐</div><h3>{{ total }}</h3><p>Total</p>
+  </div>
+  <div class="stat-tab" onclick="switchTab('articles', this)">
+    <div class="tab-icon">📰</div><h3>{{ articles|length }}</h3><p>Live Articles</p>
+  </div>
+  <div class="stat-tab" onclick="switchTab('blogs', this)">
+    <div class="tab-icon">📝</div><h3>{{ followed_blogs|length }}</h3><p>Blogs</p>
+  </div>
+  <div class="stat-tab" onclick="switchTab('podcasts', this)">
+    <div class="tab-icon">🎙️</div><h3>{{ followed_podcasts|length }}</h3><p>Podcasts</p>
+  </div>
+  <div class="stat-tab" onclick="switchTab('youtube', this)">
+    <div class="tab-icon">▶️</div><h3>{{ followed_youtube|length }}</h3><p>YouTube</p>
+  </div>
+  <div class="stat-tab" onclick="switchTab('rss', this)">
+    <div class="tab-icon">📡</div><h3>{{ followed_rss|length }}</h3><p>RSS</p>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- SIDEBAR -->
+  <div class="left-sidebar">
+    <div class="sidebar-section-title">MY CONTENT</div>
+    <div class="sidebar-item active" onclick="switchTab('all', null, this)" id="sb-all">
+      🌐 All Feeds <span class="sidebar-count">{{ total }}</span>
+    </div>
+    <div class="sidebar-item" onclick="switchTab('articles', null, this)" id="sb-articles">
+      📰 Live Articles <span class="sidebar-count">{{ articles|length }}</span>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-title">BY TYPE</div>
+    <div class="sidebar-item" onclick="switchTab('blogs', null, this)" id="sb-blogs">
+      📝 Blogs <span class="sidebar-count">{{ followed_blogs|length }}</span>
+    </div>
+    <div class="sidebar-item" onclick="switchTab('podcasts', null, this)" id="sb-podcasts">
+      🎙️ Podcasts <span class="sidebar-count">{{ followed_podcasts|length }}</span>
+    </div>
+    <div class="sidebar-item" onclick="switchTab('youtube', null, this)" id="sb-youtube">
+      ▶️ YouTube <span class="sidebar-count">{{ followed_youtube|length }}</span>
+    </div>
+    <div class="sidebar-item" onclick="switchTab('rss', null, this)" id="sb-rss">
+      📡 RSS Feeds <span class="sidebar-count">{{ followed_rss|length }}</span>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-title">QUICK LINKS</div>
+    <div class="sidebar-item" onclick="location.href='/blogs'">➕ Browse Blogs</div>
+    <div class="sidebar-item" onclick="location.href='/podcasts'">➕ Browse Podcasts</div>
+    <div class="sidebar-item" onclick="location.href='/youtube'">➕ Browse YouTube</div>
+    <div class="sidebar-item" onclick="location.href='/dashboard'">📊 Dashboard</div>
+    <div class="sidebar-item" onclick="location.href='/profile'">👤 My Profile</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-area">
+
+    <!-- ALL FEEDS -->
+    <div class="tab-content active" id="tab-all">
+      <div class="section-heading">
+        <h2>All My Feeds</h2><span>{{ total }} followed</span>
+      </div>
+      <div class="content-filter">
+        <input type="text" id="allSearch" placeholder="🔍 Search your feeds..." oninput="filterAll()"/>
+      </div>
+      {% set all_feeds = followed_blogs + followed_podcasts + followed_youtube + followed_rss %}
+      {% if all_feeds %}
+      <div id="allFeedsList">
+        {% for feed in all_feeds %}
+        <div class="followed-card" data-name="{{ feed.name|lower }}">
+          {% if feed.feed_type == 'blog' %}
+            <div class="followed-av" style="background:#fff0ea;border:3px solid #e05c2a;color:#e05c2a">{{ feed.name[:2].upper() }}</div>
+          {% elif feed.feed_type == 'podcast' %}
+            <div class="followed-av" style="background:#f5f0ff;border:3px solid #6c3fc5;color:#6c3fc5">{{ feed.name[:2].upper() }}</div>
+          {% elif feed.feed_type == 'youtube' %}
+            <div class="followed-av" style="background:#fff0f0;border:3px solid #cc0000;color:#cc0000">{{ feed.name[:2].upper() }}</div>
+          {% else %}
+            <div class="followed-av" style="background:#e8f5ee;border:3px solid #1d9e75;color:#1d9e75">{{ feed.name[:2].upper() }}</div>
+          {% endif %}
+          <div class="followed-info">
+            <h3>{{ feed.name }}</h3>
+            <p>{{ feed.description }}</p>
+            <span class="feed-badge {{ feed.feed_type }}">{{ feed.feed_type.upper() }}</span>
+            <span class="cat-label">{{ feed.category }}</span>
+          </div>
+          <div class="btn-group">
+            <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
+            <button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <div class="icon">📭</div>
+        <h3>No feeds followed yet</h3>
+        <p>Start following blogs, podcasts and channels to see them here</p>
+        <a href="/blogs" class="btn-browse-sm">Browse Blogs</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- LIVE ARTICLES -->
+    <div class="tab-content" id="tab-articles">
+      <div class="section-heading">
+        <h2>Live Articles</h2><span>{{ articles|length }} articles</span>
+      </div>
+      <div class="content-filter">
+        <input type="text" id="articleSearch" placeholder="🔍 Search articles..." oninput="filterArticles()"/>
+        <span class="filter-chip active" onclick="filterArticleType('all', this)">All</span>
+        <span class="filter-chip" onclick="filterArticleType('blog', this)">Blogs</span>
+        <span class="filter-chip" onclick="filterArticleType('rss', this)">RSS</span>
+      </div>
+      {% if articles %}
+      <div id="articlesList">
+        {% for a in articles %}
+        <div class="article-card" data-type="{{ a.feed_type }}" data-title="{{ a.title|lower }}" data-source="{{ a.feed_name|lower }}">
+          <div class="article-top">
+            <span class="feed-badge {{ a.feed_type }}">{{ a.feed_type.upper() }}</span>
+            <span class="article-source">{{ a.feed_name }}</span>
+            <span class="article-cat">{{ a.category }}</span>
+            <span class="article-date">{{ a.published[:16] if a.published != 'Recent' else 'Recent' }}</span>
+          </div>
+          <h3><a href="{{ a.link }}" target="_blank">{{ a.title }}</a></h3>
+          <p>{{ a.summary | striptags }}</p>
+          <a href="{{ a.link }}" target="_blank" class="read-more">Read full article →</a>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <div class="icon">⏳</div>
+        <h3>No articles yet</h3>
+        <p>Follow blogs or RSS feeds to see live articles here</p>
+        <a href="/rss" class="btn-browse-sm">Browse RSS Feeds</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- BLOGS -->
+    <div class="tab-content" id="tab-blogs">
+      <div class="section-heading">
+        <h2>Followed Blogs</h2><span>{{ followed_blogs|length }} blogs</span>
+      </div>
+      {% if followed_blogs %}
+        {% for feed in followed_blogs %}
+        <div class="followed-card">
+          <div class="followed-av" style="background:#fff0ea;border:3px solid #e05c2a;color:#e05c2a">{{ feed.name[:2].upper() }}</div>
+          <div class="followed-info">
+            <h3>{{ feed.name }}</h3>
+            <p>{{ feed.description }}</p>
+            <span class="feed-badge blog">BLOG</span>
+            <span class="cat-label">{{ feed.category }}</span>
+          </div>
+          <div class="btn-group">
+            <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
+            <button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+      <div class="empty-state">
+        <div class="icon">📝</div><h3>No blogs followed</h3>
+        <p>Follow some blogs to see them here</p>
+        <a href="/blogs" class="btn-browse-sm">Browse Blogs</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- PODCASTS -->
+    <div class="tab-content" id="tab-podcasts">
+      <div class="section-heading">
+        <h2>Followed Podcasts</h2><span>{{ followed_podcasts|length }} podcasts</span>
+      </div>
+      {% if followed_podcasts %}
+        {% for feed in followed_podcasts %}
+        <div class="followed-card">
+          <div class="followed-av" style="background:#f5f0ff;border:3px solid #6c3fc5;color:#6c3fc5">{{ feed.name[:2].upper() }}</div>
+          <div class="followed-info">
+            <h3>{{ feed.name }}</h3>
+            <p>{{ feed.description }}</p>
+            <span class="feed-badge podcast">PODCAST</span>
+            <span class="cat-label">{{ feed.category }}</span>
+          </div>
+          <div class="btn-group">
+            <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
+            <button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+      <div class="empty-state">
+        <div class="icon">🎙️</div><h3>No podcasts followed</h3>
+        <p>Follow some podcasts to see them here</p>
+        <a href="/podcasts" class="btn-browse-sm">Browse Podcasts</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- YOUTUBE -->
+    <div class="tab-content" id="tab-youtube">
+      <div class="section-heading">
+        <h2>Followed YouTube Channels</h2><span>{{ followed_youtube|length }} channels</span>
+      </div>
+      {% if followed_youtube %}
+        {% for feed in followed_youtube %}
+        <div class="followed-card">
+          <div class="followed-av" style="background:#fff0f0;border:3px solid #cc0000;color:#cc0000">{{ feed.name[:2].upper() }}</div>
+          <div class="followed-info">
+            <h3>{{ feed.name }}</h3>
+            <p>{{ feed.description }}</p>
+            <span class="feed-badge youtube">YOUTUBE</span>
+            <span class="cat-label">{{ feed.category }}</span>
+          </div>
+          <div class="btn-group">
+            <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
+            <button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+      <div class="empty-state">
+        <div class="icon">▶️</div><h3>No YouTube channels followed</h3>
+        <p>Follow some channels to see them here</p>
+        <a href="/youtube" class="btn-browse-sm">Browse YouTube</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- RSS -->
+    <div class="tab-content" id="tab-rss">
+      <div class="section-heading">
+        <h2>Followed RSS Feeds</h2><span>{{ followed_rss|length }} feeds</span>
+      </div>
+      {% if followed_rss %}
+        {% for feed in followed_rss %}
+        <div class="followed-card">
+          <div class="followed-av" style="background:#e8f5ee;border:3px solid #1d9e75;color:#1d9e75">{{ feed.name[:2].upper() }}</div>
+          <div class="followed-info">
+            <h3>{{ feed.name }}</h3>
+            <p>{{ feed.description }}</p>
+            <span class="feed-badge rss">RSS</span>
+            <span class="cat-label">{{ feed.category }}</span>
+          </div>
+          <div class="btn-group">
+            <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
+            <button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+      <div class="empty-state">
+        <div class="icon">📡</div><h3>No RSS feeds followed</h3>
+        <p>Follow some RSS feeds to see them here</p>
+        <a href="/rss" class="btn-browse-sm">Browse RSS Feeds</a>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+function switchTab(name, statEl, sbEl) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.stat-tab').forEach(t => t.classList.remove('active'));
+  if (statEl) statEl.classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  const sb = sbEl || document.getElementById('sb-' + name);
+  if (sb) sb.classList.add('active');
+}
+
+function filterAll() {
+  const q = document.getElementById('allSearch').value.toLowerCase();
+  document.querySelectorAll('#allFeedsList .followed-card').forEach(c => {
+    c.style.display = (c.dataset.name || '').includes(q) ? 'flex' : 'none';
+  });
+}
+
+function filterArticles() {
+  const q = document.getElementById('articleSearch').value.toLowerCase();
+  document.querySelectorAll('#articlesList .article-card').forEach(c => {
+    const match = (c.dataset.title || '').includes(q) || (c.dataset.source || '').includes(q);
+    c.style.display = match ? 'block' : 'none';
+  });
+}
+
+function filterArticleType(type, el) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#articlesList .article-card').forEach(c => {
+    c.style.display = (type === 'all' || c.dataset.type === type) ? 'block' : 'none';
+  });
+}
+
+function unfollowFeed(id, btn) {
+  fetch('/follow/' + id, { method: 'POST' })
+    .then(r => r.json())
+    .then(d => {
+      if (d.status === 'unfollowed') {
+        const card = btn.closest('.followed-card');
+        card.style.transition = 'all 0.3s';
+        card.style.opacity = '0';
+        card.style.transform = 'translateX(20px)';
+        setTimeout(() => { card.remove(); showToast('✅ Removed from your feeds'); }, 300);
+      }
+    });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+</script>
+</body>
+</html>

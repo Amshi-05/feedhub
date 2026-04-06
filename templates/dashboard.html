@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Dashboard - FeedHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa;zoom:1.4}
+
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .logo { font-size: 28px; font-weight: 700; color: #e05c2a; text-decoration: none; }
+    .logo span { color: #1a1a2e; }
+    .nav-links { list-style: none; display: flex; gap: 32px; }
+    .nav-links a { text-decoration: none; color: #444; font-size: 17px; }
+    .nav-links a:hover { color: #e05c2a; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .welcome-user { font-size: 17px; color: #444; font-weight: 600; }
+    .btn-logout {
+      padding: 10px 22px;
+      border: 2px solid #e05c2a;
+      background: transparent;
+      color: #e05c2a;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-logout:hover { background: #fff5f0; }
+
+    .welcome-banner {
+      background: linear-gradient(135deg, #e05c2a 0%, #f0845a 100%);
+      padding: 70px 80px;
+      color: #fff;
+    }
+    .welcome-banner h1 { font-size: 54px; font-weight: 700; margin-bottom: 14px; }
+    .welcome-banner p { font-size: 24px; opacity: 0.9; }
+
+    .stats-row {
+      display: flex;
+      gap: 28px;
+      padding: 44px 60px;
+    }
+    .stat-card {
+      flex: 1;
+      background: #fff;
+      border-radius: 20px;
+      padding: 54px 40px;
+      border: 1.5px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .stat-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+    }
+    .stat-icon.orange { background: #fff0ea; color: #e05c2a; }
+    .stat-icon.blue { background: #e8f0ff; color: #3b82f6; }
+    .stat-icon.green { background: #e8f5ee; color: #22c55e; }
+    .stat-icon.purple { background: #f0ebff; color: #8b5cf6; }
+    .stat-info h3 { font-size: 52px; font-weight: 700; color: #1a1a2e; }
+    .stat-info p { font-size: 22px; color: #888; margin-top: 8px; }
+
+    .content-area {
+      display: flex;
+      gap: 24px;
+      padding: 0 60px 60px;
+    }
+
+    .feed-section { flex: 2; }
+    .feed-section h2 { font-size: 40px; font-weight: 700; color: #1a1a2e; margin-bottom: 28px; }
+
+    .empty-feed {
+      background: #fff;
+      border: 2px dashed #e5e7eb;
+      border-radius: 16px;
+      padding: 60px;
+      text-align: center;
+    }
+    .empty-feed .icon { font-size: 100px; margin-bottom: 28px; }
+    .empty-feed h3 { font-size: 38px; font-weight: 600; color: #1a1a2e; margin-bottom: 16px; }
+    .empty-feed p { font-size: 24px; color: #888; margin-bottom: 40px; }
+
+    .btn-browse {
+      padding: 20px 48px;
+      background: #e05c2a;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 22px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-browse:hover { background: #c44d20; }
+
+    .feed-item {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 28px 32px;
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      transition: all 0.2s;
+    }
+    .feed-item:hover { border-color: #e05c2a; }
+    .feed-item-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #fff7f4;
+      border: 2px solid #e05c2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: #e05c2a;
+      flex-shrink: 0;
+    }
+    .feed-item-info { flex: 1; }
+    .feed-item-info h3 { font-size: 24px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+    .feed-item-info p { font-size: 18px; color: #666; margin-bottom: 10px; }
+    .feed-type {
+      font-size: 14px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .feed-type.blog { background: #fff0ea; color: #e05c2a; }
+    .feed-type.podcast { background: #f5f0ff; color: #6c3fc5; }
+    .feed-type.youtube { background: #fff0f0; color: #cc0000; }
+    .feed-type.rss { background: #e8f5ee; color: #1d9e75; }
+
+    .btn-visit {
+      padding: 14px 30px;
+      background: #e05c2a;
+      color: #fff;
+      border-radius: 10px;
+      font-size: 18px;
+      text-decoration: none;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .btn-visit:hover { background: #c44d20; }
+
+    .sidebar { flex: 1; }
+    .sidebar-card {
+      background: #fff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .sidebar-card h3 { font-size: 24px; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; }
+    .category-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 20px;
+      color: #444;
+    }
+    .category-item:last-child { border-bottom: none; }
+    .category-item span { color: #888; font-size: 17px; }
+
+    .profile-card {
+      background: linear-gradient(135deg, #fde8f0 0%, #e8f0ff 100%);
+      border: none;
+    }
+    .profile-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #e05c2a;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 700;
+      margin: 0 auto 18px;
+    }
+    .profile-card h3 { text-align: center; font-size: 26px; color: #1a1a2e; margin-bottom: 8px; }
+    .profile-card p { text-align: center; font-size: 18px; color: #666; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/" class="logo">Feed<span>Hub</span></a>
+    <ul class="nav-links">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blogs">Blogs</a></li>
+  <li><a href="/podcasts">Podcasts</a></li>
+  <li><a href="/youtube">YouTube</a></li>
+  <li><a href="/rss">RSS Feeds</a></li>
+  <li><a href="/myfeeds">My Feeds</a></li>
+</ul>
+    <div class="nav-right">
+      <span class="welcome-user">Hi, {{ current_user.username }}!</span>
+      <a href="/profile" class="btn-logout" style="margin-right:8px;">Profile</a>
+<a href="/logout" class="btn-logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="welcome-banner">
+    <h1>Welcome back, {{ current_user.username }}! 👋</h1>
+    <p>Here's what's happening in your feed today.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon orange"><i class="fas fa-rss"></i></div>
+      <div class="stat-info"><h3>{{ followed_blogs|length }}</h3><p>Followed Blogs</p></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="fas fa-podcast"></i></div>
+      <div class="stat-info"><h3>{{ followed_podcasts|length }}</h3><p>Podcasts</p></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="fab fa-youtube"></i></div>
+      <div class="stat-info"><h3>{{ followed_youtube|length }}</h3><p>YouTube Channels</p></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon purple"><i class="fas fa-bookmark"></i></div>
+      <div class="stat-info"><h3>{{ followed_rss|length }}</h3><p>RSS Feeds</p></div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <div class="feed-section">
+      <h2>Your Feed</h2>
+      {% if followed_blogs or followed_podcasts or followed_youtube or followed_rss %}
+        {% for feed in followed_blogs + followed_podcasts + followed_youtube + followed_rss %}
+        <div class="feed-item">
+          <div class="feed-item-avatar">{{ feed.name[:2].upper() }}</div>
+          <div class="feed-item-info">
+            <h3>{{ feed.name }}</h3>
+            <p>{{ feed.description }}</p>
+            <span class="feed-type {{ feed.feed_type }}">{{ feed.feed_type.upper() }}</span>
+          </div>
+          <a href="{{ feed.url }}" target="_blank" class="btn-visit">Visit</a>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-feed">
+          <div class="icon">📭</div>
+          <h3>Your feed is empty</h3>
+          <p>Start following blogs and channels to see their latest content here.</p>
+          <a href="/blogs" class="btn-browse">Browse Blogs</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-card profile-card">
+        <div class="profile-avatar">{{ current_user.username[0].upper() }}</div>
+        <h3>{{ current_user.username }}</h3>
+        <p>{{ current_user.email }}</p>
+      </div>
+      <div class="sidebar-card">
+        <h3>Browse Categories</h3>
+        <div class="category-item">💻 Technology <span>12.4K sources</span></div>
+        <div class="category-item">💼 Business <span>8.9K sources</span></div>
+        <div class="category-item">🔬 Science <span>6.3K sources</span></div>
+        <div class="category-item">🎨 Design <span>4.1K sources</span></div>
+        <div class="category-item">🎓 Education <span>7.8K sources</span></div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

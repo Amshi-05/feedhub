@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Register - FeedHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fde8f0 0%, #e8f0ff 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      margin: 0;
+      zoom:1.4;
+    }
+
+    .card {
+      background: #fff;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .form-panel {
+      flex: 1;
+      padding: 80px 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .brand {
+      font-size: 26px;
+      font-weight: 700;
+      color: #e05c2a;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .form-panel h2 {
+      font-size: 64px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 40px;
+    }
+
+    .form-group {
+      margin-bottom: 28px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 28px;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 26px 28px;
+      border: 1.5px solid #ddd;
+      border-radius: 12px;
+      font-size: 28px;
+      color: #333;
+      outline: none;
+      background: #fafafa;
+      transition: border 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: #e05c2a;
+      background: #fff;
+    }
+
+    .form-group input::placeholder { color: #bbb; }
+
+    .btn-auth {
+      width: 100%;
+      padding: 28px;
+      background: #e05c2a;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 28px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+
+    .btn-auth:hover { background: #c44d20; }
+
+    .divider {
+      text-align: center;
+      color: #aaa;
+      font-size: 22px;
+      margin: 28px 0;
+      position: relative;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 36%;
+      height: 1px;
+      background: #eee;
+    }
+
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    .social-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+
+    .social-btn {
+      flex: 1;
+      padding: 22px;
+      border: 1.5px solid #eee;
+      border-radius: 12px;
+      background: #fff;
+      font-size: 32px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .social-btn:hover { border-color: #e05c2a; transform: translateY(-2px); }
+    .social-btn.google { color: #DB4437; }
+    .social-btn.linkedin { color: #0077B5; }
+    .social-btn.facebook { color: #1877F2; }
+
+    .auth-footer {
+      text-align: center;
+      font-size: 26px;
+      color: #888;
+    }
+
+    .auth-footer a {
+      color: #e05c2a;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .alert {
+      padding: 18px 22px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    .alert-success { background: #d4edda; color: #155724; }
+    .alert-danger { background: #f8d7da; color: #721c24; }
+
+    .illustration-panel {
+      flex: 1;
+      background: linear-gradient(160deg, #a8d8ea 0%, #c9e8f5 50%, #fde8d8 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 40px;
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+    }
+
+    .big-circle {
+      width: 420px;
+      height: 420px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 180px;
+      margin-bottom: 40px;
+    }
+
+    .illustration-panel h3 {
+      font-size: 42px;
+      font-weight: 700;
+      color: #1a1a2e;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .illustration-panel p {
+      font-size: 24px;
+      color: #555;
+      text-align: center;
+      line-height: 1.7;
+      max-width: 380px;
+    }
+
+    .dot {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+    }
+
+    .dot-1 { width: 120px; height: 120px; top: 30px; right: 30px; }
+    .dot-2 { width: 70px; height: 70px; bottom: 60px; left: 30px; }
+    .dot-3 { width: 50px; height: 50px; top: 160px; left: 20px; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+
+    <div class="form-panel">
+      <div class="brand">FeedHub</div>
+      <h2>Create Account</h2>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{category}}">{{ message }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <form method="POST">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" name="username" placeholder="Enter your username" required/>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="username@gmail.com" required/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Enter your password" required/>
+        </div>
+        <button type="submit" class="btn-auth">Sign up free</button>
+      </form>
+
+      <div class="divider">or continue with</div>
+
+      <div class="social-buttons">
+        <button class="social-btn google">
+          <i class="fab fa-google"></i>
+        </button>
+        <button class="social-btn linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </button>
+        <button class="social-btn facebook">
+          <i class="fab fa-facebook-f"></i>
+        </button>
+      </div>
+
+      <p class="auth-footer">Already have an account? <a href="/login">Log in</a></p>
+    </div>
+
+    <div class="illustration-panel">
+      <div class="dot dot-1"></div>
+      <div class="dot dot-2"></div>
+      <div class="dot dot-3"></div>
+      <div class="big-circle">📰</div>
+      <h3>Discover Amazing Content</h3>
+      <p>Follow the best blogs, podcasts, YouTube channels and RSS feeds all in one place.</p>
+    </div>
+
+  </div>
+
+</body>
+</html>

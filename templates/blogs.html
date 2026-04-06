@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Top Blogs - FeedHub</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; font-size: 18px; zoom: 1.6; }
+
+    /* NAVBAR */
+    .navbar {
+      background: #fff;
+      border-bottom: 2px solid #e5e7eb;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 70px;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .logo { font-size: 30px; font-weight: 700; color: #e05c2a; text-decoration: none; }
+    .logo span { color: #1a1a2e; }
+    .nav-links { list-style: none; display: flex; gap: 32px; }
+    .nav-links a { text-decoration: none; color: #444; font-size: 18px; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: #e05c2a; font-weight: 600; }
+    .nav-buttons { display: flex; gap: 12px; align-items: center; }
+    .btn-login {
+      padding: 10px 22px; border: 2px solid #e05c2a;
+      background: transparent; color: #e05c2a;
+      border-radius: 8px; font-size: 16px; cursor: pointer; text-decoration: none;
+    }
+    .btn-login:hover { background: #fff5f0; }
+    .btn-signup {
+      padding: 10px 22px; border: none;
+      background: #e05c2a; color: #fff;
+      border-radius: 8px; font-size: 16px; cursor: pointer; text-decoration: none;
+    }
+    .btn-signup:hover { background: #c44d20; }
+
+    /* PAGE HEADER */
+    .page-header {
+      background: linear-gradient(135deg, #e05c2a 0%, #f0845a 100%);
+      padding: 70px 100px;
+      text-align: center;
+    }
+    .page-header h1 { font-size: 56px; font-weight: 700; color: #fff; margin-bottom: 14px; }
+    .page-header p { font-size: 22px; color: rgba(255,255,255,0.88); }
+
+    /* FILTER BAR */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 28px 80px;
+      background: #fff;
+      border-bottom: 2px solid #e5e7eb;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 72px;
+      z-index: 99;
+    }
+    .filter-search {
+      padding: 14px 20px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 18px;
+      width: 360px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .filter-search:focus { border-color: #e05c2a; }
+    .filter-tags { display: flex; gap: 12px; flex-wrap: wrap; }
+    .filter-tags span {
+      padding: 10px 24px;
+      border: 2px solid #ddd;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      color: #555;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .filter-tags span:hover,
+    .filter-tags span.active {
+      border-color: #e05c2a;
+      color: #e05c2a;
+      background: #fff5f0;
+    }
+
+    /* RESULTS INFO */
+    .results-info {
+      padding: 20px 80px 0;
+      font-size: 16px;
+      color: #888;
+    }
+
+    /* BLOG LIST */
+    .blog-list {
+      padding: 24px 80px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .blog-card {
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 32px 44px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      transition: all 0.2s;
+    }
+    .blog-card:hover {
+      border-color: #e05c2a;
+      transform: translateX(5px);
+      box-shadow: 0 4px 20px rgba(224,92,42,0.08);
+    }
+
+    .blog-rank {
+      font-size: 36px;
+      font-weight: 700;
+      color: #e05c2a;
+      min-width: 52px;
+      text-align: center;
+    }
+
+    .blog-avatar {
+      width: 76px; height: 76px;
+      border-radius: 50%;
+      background: #fff7f4;
+      border: 2px solid #e05c2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: #e05c2a;
+      flex-shrink: 0;
+    }
+
+    .blog-info { flex: 1; min-width: 0; }
+    .blog-info h3 { font-size: 24px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+    .blog-info p { font-size: 18px; color: #666; margin-bottom: 12px; line-height: 1.5; }
+
+    .blog-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .blog-meta .tag {
+      font-size: 14px; color: #e05c2a;
+      background: #fff0ea; padding: 4px 14px;
+      border-radius: 20px; font-weight: 600;
+    }
+    .blog-meta .info {
+      font-size: 14px; color: #888;
+      background: #f7f8fa; padding: 4px 14px;
+      border-radius: 20px;
+    }
+
+    .btn-follow {
+      padding: 14px 34px;
+      background: #e05c2a; color: #fff;
+      border: none; border-radius: 10px;
+      font-size: 17px; cursor: pointer;
+      white-space: nowrap; font-weight: 600;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .btn-follow:hover { background: #c44d20; transform: scale(1.03); }
+    .btn-follow.following {
+      background: #fff; color: #e05c2a;
+      border: 2px solid #e05c2a;
+    }
+    .btn-follow.following:hover { background: #fff5f0; }
+
+    /* NO RESULTS */
+    .no-results {
+      text-align: center;
+      padding: 70px;
+      font-size: 22px;
+      color: #888;
+      display: none;
+      background: #fff;
+      border-radius: 16px;
+      border: 2px dashed #e5e7eb;
+    }
+    .no-results .icon { font-size: 60px; margin-bottom: 16px; display: block; }
+
+    /* TOAST */
+    #toast {
+      position: fixed; bottom: 36px; right: 36px;
+      background: #1a1a2e; color: #fff;
+      padding: 16px 28px; border-radius: 12px;
+      font-size: 18px; display: none; z-index: 9999;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="/" class="logo">Feed<span>Hub</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/blogs">Blogs</a></li>
+    <li><a href="/podcasts">Podcasts</a></li>
+    <li><a href="/youtube">YouTube</a></li>
+    <li><a href="/rss">RSS Feeds</a></li>
+    {% if current_user.is_authenticated %}
+    <li><a href="/myfeeds">My Feeds</a></li>
+    {% endif %}
+  </ul>
+  <div class="nav-buttons">
+    {% if current_user.is_authenticated %}
+      <a href="/dashboard" class="btn-login">← Dashboard</a>
+      <a href="/logout" class="btn-signup">Logout</a>
+    {% else %}
+      <a href="/login" class="btn-login">Log in</a>
+      <a href="/register" class="btn-signup">Sign up free</a>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>📝 Top Blogs</h1>
+  <p>The best blogs ranked by traffic, social followers and freshness</p>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <input type="text" id="searchInput"
+         placeholder="🔍  Search blogs..."
+         class="filter-search"
+         oninput="searchBlogs()"/>
+  <div class="filter-tags">
+    <span class="active" onclick="filterCategory(this,'all')">All</span>
+    <span onclick="filterCategory(this,'Technology')">Technology</span>
+    <span onclick="filterCategory(this,'Business')">Business</span>
+    <span onclick="filterCategory(this,'Science')">Science</span>
+    <span onclick="filterCategory(this,'Design')">Design</span>
+    <span onclick="filterCategory(this,'Education')">Education</span>
+    <span onclick="filterCategory(this,'Health')">Health</span>
+  </div>
+</div>
+
+<!-- RESULTS INFO -->
+<div class="results-info" id="resultsInfo"></div>
+
+<!-- BLOG LIST -->
+<section class="blog-list">
+  {% for feed in feeds %}
+  <div class="blog-card" data-category="{{ feed.category }}">
+    <div class="blog-rank">{{ loop.index }}</div>
+    <div class="blog-avatar">{{ feed.name[:2].upper() }}</div>
+    <div class="blog-info">
+      <h3>{{ feed.name }}</h3>
+      <p>{{ feed.description }}</p>
+      <div class="blog-meta">
+        <span class="tag">{{ feed.category }}</span>
+        <span class="info">📰 Blog</span>
+      </div>
+    </div>
+    {% if current_user.is_authenticated %}
+      <button class="btn-follow {% if feed.id in followed_ids %}following{% endif %}"
+              onclick="toggleFollow({{ feed.id }}, this)">
+        {% if feed.id in followed_ids %}✓ Following{% else %}+ Follow{% endif %}
+      </button>
+    {% else %}
+      <a href="/login"><button class="btn-follow">+ Follow</button></a>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <div class="no-results" id="noResults">
+    <span class="icon">🔍</span>
+    No blogs found matching your search.<br>
+    <small style="font-size:16px;color:#aaa;">Try a different keyword or category</small>
+  </div>
+</section>
+
+<div id="toast"></div>
+
+<script>
+  // ---- READ URL PARAMS ON PAGE LOAD ----
+  window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const search = params.get('search');
+    const category = params.get('category');
+
+    if (search) {
+      document.getElementById('searchInput').value = search;
+      searchBlogs();
+    }
+
+    if (category) {
+      document.querySelectorAll('.filter-tags span').forEach(tag => {
+        if (tag.textContent.trim() === category) {
+          filterCategory(tag, category);
+        }
+      });
+    }
+
+    updateResultsInfo();
+  };
+
+  // ---- SEARCH ----
+  function searchBlogs() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('.blog-card');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const name = card.querySelector('h3').textContent.toLowerCase();
+      const desc = card.querySelector('p').textContent.toLowerCase();
+      const cat  = card.querySelector('.tag').textContent.toLowerCase();
+      const match = name.includes(q) || desc.includes(q) || cat.includes(q);
+      card.style.display = match ? 'flex' : 'none';
+      if (match) visible++;
+    });
+
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+    updateResultsInfo(visible);
+  }
+
+  // ---- FILTER BY CATEGORY ----
+  function filterCategory(el, category) {
+    // reset search
+    document.getElementById('searchInput').value = '';
+
+    // update active tag
+    document.querySelectorAll('.filter-tags span').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+
+    const cards = document.querySelectorAll('.blog-card');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const cat = card.dataset.category;
+      const show = category === 'all' || cat === category;
+      card.style.display = show ? 'flex' : 'none';
+      if (show) visible++;
+    });
+
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+    updateResultsInfo(visible);
+  }
+
+  // ---- UPDATE RESULTS COUNT ----
+  function updateResultsInfo(count) {
+    const total = document.querySelectorAll('.blog-card').length;
+    const showing = count !== undefined ? count : total;
+    const info = document.getElementById('resultsInfo');
+    if (showing === total) {
+      info.textContent = `Showing all ${total} blogs`;
+    } else {
+      info.textContent = `Showing ${showing} of ${total} blogs`;
+    }
+  }
+
+  // ---- FOLLOW / UNFOLLOW ----
+  function toggleFollow(feedId, btn) {
+    fetch('/follow/' + feedId, { method: 'POST' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'followed') {
+          btn.textContent = '✓ Following';
+          btn.classList.add('following');
+          showToast('✅ Added to My Feeds!');
+        } else {
+          btn.textContent = '+ Follow';
+          btn.classList.remove('following');
+          showToast('Removed from your feeds');
+        }
+      });
+  }
+
+  // ---- TOAST ----
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 3000);
+  }
+</script>
+
+</body>
+</html>

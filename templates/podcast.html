@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Top Podcasts - FeedHub</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; font-size: 20px; zoom: 1.4; }
+
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      height: 85px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 80px;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .logo { font-size: 34px; font-weight: 700; color: #e05c2a; text-decoration: none; }
+    .logo span { color: #1a1a2e; }
+    .nav-links { list-style: none; display: flex; gap: 40px; }
+    .nav-links a { text-decoration: none; color: #444; font-size: 20px; }
+    .nav-links a:hover { color: #e05c2a; }
+    .nav-buttons { display: flex; gap: 14px; }
+    .btn-login {
+      padding: 14px 30px; border: 2px solid #e05c2a;
+      background: transparent; color: #e05c2a;
+      border-radius: 8px; font-size: 18px; cursor: pointer;
+    }
+    .btn-signup {
+      padding: 14px 30px; border: none;
+      background: #e05c2a; color: #fff;
+      border-radius: 8px; font-size: 18px; cursor: pointer;
+    }
+    .btn-login:hover { background: #fff5f0; }
+    .btn-signup:hover { background: #c44d20; }
+
+    .page-header {
+      background: linear-gradient(135deg, #6c3fc5 0%, #9b6af0 100%);
+      padding: 80px 100px;
+      text-align: center;
+    }
+    .page-header h1 { font-size: 62px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+    .page-header p { font-size: 26px; color: rgba(255,255,255,0.85); }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+    .back-btn:hover { opacity: 1; }
+
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 40px 100px;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      flex-wrap: wrap;
+    }
+    .filter-search {
+      padding: 20px 28px; border: 2px solid #ddd;
+      border-radius: 12px; font-size: 22px;
+      width: 420px; outline: none;
+    }
+    .filter-search:focus { border-color: #6c3fc5; }
+    .filter-tags { display: flex; gap: 16px; flex-wrap: wrap; }
+    .filter-tags span {
+      padding: 18px 36px; border: 2px solid #ddd;
+      border-radius: 40px; font-size: 22px;
+      cursor: pointer; color: #555;
+    }
+    .filter-tags span:hover,
+    .filter-tags span.active {
+      border-color: #6c3fc5; color: #6c3fc5; background: #f5f0ff;
+    }
+
+    .podcast-list {
+      padding: 50px 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      width: 100%;
+    }
+
+    .podcast-card {
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 44px 52px;
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      transition: all 0.2s;
+    }
+    .podcast-card:hover {
+      border-color: #6c3fc5;
+      transform: translateX(6px);
+    }
+
+    .podcast-rank {
+      font-size: 48px;
+      font-weight: 700;
+      color: #6c3fc5;
+      min-width: 64px;
+      text-align: center;
+    }
+
+    .podcast-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 20px;
+      background: #f5f0ff;
+      border: 2px solid #6c3fc5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 700;
+      color: #6c3fc5;
+      flex-shrink: 0;
+    }
+
+    .podcast-info { flex: 1; }
+    .podcast-info h3 { font-size: 30px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; }
+    .podcast-info p { font-size: 22px; color: #666; margin-bottom: 16px; }
+
+    .podcast-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .podcast-meta span {
+      font-size: 18px; color: #888;
+      background: #f7f8fa;
+      padding: 8px 20px; border-radius: 20px;
+    }
+
+    .btn-follow {
+      padding: 18px 44px;
+      background: #6c3fc5;
+      color: #fff; border: none;
+      border-radius: 12px; font-size: 20px;
+      cursor: pointer; white-space: nowrap; font-weight: 600;
+    }
+    .btn-follow:hover { background: #5530a8; }
+    .btn-follow.following {
+      background: #fff;
+      color: #6c3fc5;
+      border: 2px solid #6c3fc5;
+    }
+    .btn-follow.following:hover { background: #f5f0ff; }
+
+    #toast {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      background: #1a1a2e;
+      color: #fff;
+      padding: 18px 32px;
+      border-radius: 12px;
+      font-size: 20px;
+      display: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+  <a href="/" class="logo">Feed<span>Hub</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/blogs">Blogs</a></li>
+    <li><a href="/podcasts">Podcasts</a></li>
+    <li><a href="/youtube">YouTube</a></li>
+    <li><a href="/rss">RSS Feeds</a></li>
+    {% if current_user.is_authenticated %}
+    <li><a href="/myfeeds">My Feeds</a></li>
+    {% endif %}
+  </ul>
+  <div class="nav-buttons">
+    {% if current_user.is_authenticated %}
+      <a href="/dashboard" class="btn-login">← Dashboard</a>
+      <a href="/logout" class="btn-signup">Logout</a>
+    {% else %}
+      <a href="/login" class="btn-login">Log in</a>
+      <a href="/register" class="btn-signup">Sign up free</a>
+    {% endif %}
+  </div>
+</nav>
+
+ <section class="page-header">
+  <h1>Top 100 Podcasts</h1>
+  <p>The most popular podcasts ranked by listeners and reviews</p>
+</section>
+  <section class="filter-bar">
+    <input type="text" id="searchInput" placeholder="Search podcasts..."
+           class="filter-search" onkeyup="searchPodcasts()"/>
+    <div class="filter-tags">
+      <span class="active" onclick="filterCategory(this, 'all')">All</span>
+      <span onclick="filterCategory(this, 'Technology')">Technology</span>
+      <span onclick="filterCategory(this, 'Business')">Business</span>
+      <span onclick="filterCategory(this, 'Science')">Science</span>
+      <span onclick="filterCategory(this, 'Comedy')">Comedy</span>
+      <span onclick="filterCategory(this, 'Education')">Education</span>
+    </div>
+  </section>
+
+  <section class="podcast-list">
+    {% for feed in feeds %}
+    <div class="podcast-card" data-category="{{ feed.category }}">
+      <div class="podcast-rank">{{ loop.index }}</div>
+      <div class="podcast-avatar">{{ feed.name[:2].upper() }}</div>
+      <div class="podcast-info">
+        <h3>{{ feed.name }}</h3>
+        <p>{{ feed.description }}</p>
+        <div class="podcast-meta">
+          <span>{{ feed.category }}</span>
+        </div>
+      </div>
+      {% if current_user.is_authenticated %}
+        <button class="btn-follow {% if feed.id in followed_ids %}following{% endif %}"
+          onclick="toggleFollow({{ feed.id }}, this)">
+          {% if feed.id in followed_ids %}Following{% else %}Follow{% endif %}
+        </button>
+      {% else %}
+        <a href="/login"><button class="btn-follow">Follow</button></a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </section>
+
+  <div id="toast"></div>
+
+  <script>
+    function searchPodcasts() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.podcast-card');
+      cards.forEach(card => {
+        const name = card.querySelector('h3').textContent.toLowerCase();
+        const desc = card.querySelector('p').textContent.toLowerCase();
+        card.style.display = (name.includes(query) || desc.includes(query)) ? 'flex' : 'none';
+      });
+    }
+
+    function filterCategory(el, category) {
+      document.querySelectorAll('.filter-tags span').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      const cards = document.querySelectorAll('.podcast-card');
+      cards.forEach(card => {
+        const cat = card.dataset.category;
+        card.style.display = (category === 'all' || cat === category) ? 'flex' : 'none';
+      });
+    }
+
+    function toggleFollow(feedId, btn) {
+      fetch('/follow/' + feedId, { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'followed') {
+            btn.textContent = 'Following';
+            btn.classList.add('following');
+            showToast('Added to your feed!');
+          } else {
+            btn.textContent = 'Follow';
+            btn.classList.remove('following');
+            showToast('Removed from your feed!');
+          }
+        });
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+  </script>
+
+</body>
+</html>

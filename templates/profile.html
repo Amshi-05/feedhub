@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Profile - FeedHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa;zoom:1.4}
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 80px;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .logo { font-size: 32px; font-weight: 700; color: #e05c2a; text-decoration: none; }
+    .logo span { color: #1a1a2e; }
+    .nav-links { list-style: none; display: flex; gap: 36px; }
+    .nav-links a { text-decoration: none; color: #444; font-size: 20px; }
+    .nav-links a:hover { color: #e05c2a; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .welcome-user { font-size: 18px; color: #444; font-weight: 600; }
+    .btn-logout {
+      padding: 12px 26px;
+      border: 2px solid #e05c2a;
+      background: transparent;
+      color: #e05c2a;
+      border-radius: 8px;
+      font-size: 17px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-logout:hover { background: #fff5f0; }
+
+    .page-header {
+      background: linear-gradient(135deg, #e05c2a 0%, #f0845a 100%);
+      padding: 60px 80px;
+      color: #fff;
+    }
+    .page-header h1 { font-size: 50px; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { font-size: 22px; opacity: 0.9; }
+
+    .profile-content {
+      max-width: 1100px;
+      margin: 50px auto;
+      padding: 0 60px;
+      display: flex;
+      gap: 40px;
+    }
+
+    /* LEFT CARD */
+    .profile-left {
+      width: 320px;
+      flex-shrink: 0;
+    }
+
+    .profile-card {
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .profile-avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: #e05c2a;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      font-weight: 700;
+      margin: 0 auto 20px;
+    }
+
+    .profile-card h2 { font-size: 28px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+    .profile-card p { font-size: 18px; color: #888; margin-bottom: 20px; }
+
+    .profile-stats {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 20px;
+    }
+
+    .stat { text-align: center; }
+    .stat h3 { font-size: 28px; font-weight: 700; color: #e05c2a; }
+    .stat p { font-size: 15px; color: #888; }
+
+    .quick-links {
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 28px;
+    }
+
+    .quick-links h3 { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 16px; }
+
+    .quick-link-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f0f0;
+      text-decoration: none;
+      color: #444;
+      font-size: 18px;
+      transition: color 0.2s;
+    }
+
+    .quick-link-item:last-child { border-bottom: none; }
+    .quick-link-item:hover { color: #e05c2a; }
+    .quick-link-item i { color: #e05c2a; width: 24px; }
+
+    /* RIGHT FORM */
+    .profile-right { flex: 1; }
+
+    .form-card {
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 44px 48px;
+      margin-bottom: 24px;
+    }
+
+    .form-card h2 { font-size: 32px; font-weight: 700; color: #1a1a2e; margin-bottom: 32px; }
+
+    .form-group { margin-bottom: 26px; }
+
+    .form-group label {
+      display: block;
+      font-size: 20px;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 18px 22px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 20px;
+      color: #333;
+      outline: none;
+      background: #fafafa;
+      transition: border 0.2s;
+    }
+
+    .form-group input:focus { border-color: #e05c2a; background: #fff; }
+    .form-group input::placeholder { color: #bbb; }
+
+    .form-hint { font-size: 15px; color: #aaa; margin-top: 6px; }
+
+    .btn-save {
+      padding: 18px 48px;
+      background: #e05c2a;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-save:hover { background: #c44d20; }
+
+    .alert {
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      font-size: 18px;
+    }
+    .alert-success { background: #d4edda; color: #155724; }
+    .alert-danger { background: #f8d7da; color: #721c24; }
+
+    .danger-zone {
+      background: #fff;
+      border: 2px solid #f8d7da;
+      border-radius: 20px;
+      padding: 36px 48px;
+    }
+    .danger-zone h2 { font-size: 28px; font-weight: 700; color: #721c24; margin-bottom: 12px; }
+    .danger-zone p { font-size: 18px; color: #888; margin-bottom: 20px; }
+    .btn-danger {
+      padding: 16px 36px;
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .btn-danger:hover { background: #c82333; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/" class="logo">Feed<span>Hub</span></a>
+   <ul class="nav-links">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blogs">Blogs</a></li>
+  <li><a href="/podcasts">Podcasts</a></li>
+  <li><a href="/youtube">YouTube</a></li>
+  <li><a href="/rss">RSS Feeds</a></li>
+  <li><a href="/myfeeds">My Feeds</a></li>
+</ul>
+    <div class="nav-right">
+      <span class="welcome-user">Hi, {{ current_user.username }}!</span>
+      <a href="/logout" class="btn-logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <h1>My Profile</h1>
+    <p>Manage your account settings and preferences</p>
+  </div>
+
+  <div class="profile-content">
+
+    <!-- LEFT -->
+    <div class="profile-left">
+      <div class="profile-card">
+        <div class="profile-avatar">{{ current_user.username[0].upper() }}</div>
+        <h2>{{ current_user.username }}</h2>
+        <p>{{ current_user.email }}</p>
+        <div class="profile-stats">
+          <div class="stat">
+            <h3>{{ current_user.followed|length }}</h3>
+            <p>Following</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-links">
+        <h3>Quick Links</h3>
+        <a href="/dashboard" class="quick-link-item">
+          <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a href="/blogs" class="quick-link-item">
+          <i class="fas fa-rss"></i> Browse Blogs
+        </a>
+        <a href="/podcasts" class="quick-link-item">
+          <i class="fas fa-podcast"></i> Podcasts
+        </a>
+        <a href="/youtube" class="quick-link-item">
+          <i class="fab fa-youtube"></i> YouTube
+        </a>
+        <a href="/logout" class="quick-link-item">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="profile-right">
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{category}}">{{ message }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <div class="form-card">
+        <h2>Edit Profile</h2>
+        <form method="POST">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" value="{{ current_user.username }}" required/>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value="{{ current_user.email }}" required/>
+          </div>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" name="password" placeholder="Leave blank to keep current password"/>
+            <p class="form-hint">Only fill this if you want to change your password</p>
+          </div>
+          <button type="submit" class="btn-save">Save Changes</button>
+        </form>
+      </div>
+
+      <div class="danger-zone">
+        <h2>Danger Zone</h2>
+        <p>Once you delete your account, there is no going back. Please be certain.</p>
+        <button class="btn-danger" onclick="alert('This feature will be available soon!')">
+          Delete Account
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

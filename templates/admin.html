@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Admin Panel - FeedHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa;zoom:1.4}
+
+    .navbar {
+      background: #1a1a2e;
+      height: 75px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .logo { font-size: 28px; font-weight: 700; color: #e05c2a; text-decoration: none; }
+    .logo span { color: #fff; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .admin-badge {
+      background: #e05c2a;
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .btn-back {
+      padding: 10px 22px;
+      border: 2px solid #fff;
+      background: transparent;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.1); }
+
+    .page-header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%);
+      padding: 50px 80px;
+      color: #fff;
+    }
+    .page-header h1 { font-size: 48px; font-weight: 700; margin-bottom: 10px; }
+    .page-header p { font-size: 20px; opacity: 0.8; }
+
+    .stats-row {
+      display: flex;
+      gap: 24px;
+      padding: 40px 80px;
+    }
+    .stat-card {
+      flex: 1;
+      background: #fff;
+      border-radius: 16px;
+      padding: 36px 28px;
+      border: 2px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .stat-icon {
+      width: 80px; height: 80px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+    }
+    .stat-icon.blue { background: #e8f0ff; color: #3b82f6; }
+    .stat-icon.orange { background: #fff0ea; color: #e05c2a; }
+    .stat-icon.green { background: #e8f5ee; color: #22c55e; }
+    .stat-info h3 { font-size: 42px; font-weight: 700; color: #1a1a2e; }
+    .stat-info p { font-size: 18px; color: #888; margin-top: 4px; }
+
+    .content { padding: 0 80px 60px; }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 24px;
+      margin-top: 40px;
+    }
+
+    .alert {
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      font-size: 18px;
+    }
+    .alert-success { background: #d4edda; color: #155724; }
+    .alert-danger { background: #f8d7da; color: #721c24; }
+
+    /* ADD FEED FORM */
+    .add-feed-card {
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 36px 40px;
+      margin-bottom: 40px;
+    }
+
+    .add-feed-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 14px 16px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+      color: #333;
+      background: #fafafa;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus { border-color: #e05c2a; background: #fff; }
+
+    .btn-add {
+      margin-top: 20px;
+      padding: 16px 40px;
+      background: #e05c2a;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-add:hover { background: #c44d20; }
+
+    /* TABLES */
+    table {
+      width: 100%;
+      background: #fff;
+      border-radius: 16px;
+      border: 2px solid #e5e7eb;
+      border-collapse: collapse;
+      overflow: hidden;
+    }
+
+    th {
+      background: #f7f8fa;
+      padding: 20px 24px;
+      text-align: left;
+      font-size: 18px;
+      font-weight: 600;
+      color: #555;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    td {
+      padding: 18px 24px;
+      font-size: 18px;
+      color: #333;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f9f9f9; }
+
+    .badge {
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .badge-blog { background: #fff0ea; color: #e05c2a; }
+    .badge-podcast { background: #f5f0ff; color: #6c3fc5; }
+    .badge-youtube { background: #fff0f0; color: #cc0000; }
+    .badge-rss { background: #e8f5ee; color: #1d9e75; }
+    .badge-admin { background: #e8f0ff; color: #3b82f6; }
+
+    .action-btns { display: flex; gap: 10px; align-items: center; }
+
+    .btn-delete {
+      padding: 8px 20px;
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn-delete:hover { background: #c82333; }
+
+    .btn-toggle {
+      padding: 8px 20px;
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn-toggle:hover { background: #2563eb; }
+
+    .you-label { color: #aaa; font-size: 15px; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/" class="logo">Feed<span>Hub</span></a>
+    <div class="nav-right">
+      <span class="admin-badge">Admin Panel</span>
+      <a href="/dashboard" class="btn-back">← Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <h1>Admin Panel</h1>
+    <p>Manage users, feeds and content</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+      <div class="stat-info">
+        <h3>{{ users|length }}</h3>
+        <p>Total Users</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange"><i class="fas fa-rss"></i></div>
+      <div class="stat-info">
+        <h3>{{ feeds|length }}</h3>
+        <p>Total Feeds</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="fas fa-heart"></i></div>
+      <div class="stat-info">
+        <h3>{{ total_follows }}</h3>
+        <p>Total Follows</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{category}}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <!-- USERS TABLE -->
+    <h2 class="section-title">All Users</h2>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Following</th>
+        <th>Action</th>
+      </tr>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          {% if user.is_admin %}
+            <span class="badge badge-admin">Admin</span>
+          {% else %}
+            <span class="badge badge-blog">User</span>
+          {% endif %}
+        </td>
+        <td>{{ user.followed|length }} feeds</td>
+        <td>
+          <div class="action-btns">
+            {% if user.id != current_user.id %}
+              <form method="POST" action="/admin/toggle_admin/{{ user.id }}">
+                <button type="submit" class="btn-toggle">
+                  {% if user.is_admin %}Remove Admin{% else %}Make Admin{% endif %}
+                </button>
+              </form>
+              <form method="POST" action="/admin/delete_user/{{ user.id }}"
+                    onsubmit="return confirm('Delete this user?')">
+                <button type="submit" class="btn-delete">Delete</button>
+              </form>
+            {% else %}
+              <span class="you-label">You (Admin)</span>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <!-- ADD FEED FORM -->
+    <h2 class="section-title">Add New Feed</h2>
+    <div class="add-feed-card">
+      <form method="POST" action="/admin/add_feed">
+        <div class="add-feed-grid">
+          <div class="form-group">
+            <label>Feed Name</label>
+            <input type="text" name="name" placeholder="e.g. TechCrunch" required/>
+          </div>
+          <div class="form-group">
+            <label>URL</label>
+            <input type="text" name="url" placeholder="https://..." required/>
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select name="category">
+              <option>Technology</option>
+              <option>Business</option>
+              <option>Science</option>
+              <option>Design</option>
+              <option>Education</option>
+              <option>News</option>
+              <option>Entertainment</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Type</label>
+            <select name="feed_type">
+              <option value="blog">Blog</option>
+              <option value="podcast">Podcast</option>
+              <option value="youtube">YouTube</option>
+              <option value="rss">RSS Feed</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:16px;">
+          <label>Description</label>
+          <input type="text" name="description"
+                 placeholder="Brief description of this feed" required/>
+        </div>
+        <button type="submit" class="btn-add">+ Add Feed</button>
+      </form>
+    </div>
+
+    <!-- FEEDS TABLE -->
+    <h2 class="section-title">All Feeds</h2>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Type</th>
+        <th>Followers</th>
+        <th>Action</th>
+      </tr>
+      {% for feed in feeds %}
+      <tr>
+        <td>{{ feed.id }}</td>
+        <td>{{ feed.name }}</td>
+        <td>{{ feed.category }}</td>
+        <td>
+          <span class="badge badge-{{ feed.feed_type }}">
+            {{ feed.feed_type.upper() }}
+          </span>
+        </td>
+        <td>{{ feed.followers|length }}</td>
+        <td>
+          <form method="POST" action="/admin/delete_feed/{{ feed.id }}"
+                onsubmit="return confirm('Delete this feed?')">
+            <button type="submit" class="btn-delete">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+
+  </div>
+
+</body>
+</html>

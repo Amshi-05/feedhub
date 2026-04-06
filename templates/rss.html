@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RSS Feeds - FeedHub</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; font-size: 20px;zoom:1.4}
+
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      height: 85px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 80px;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .logo { font-size: 34px; font-weight: 700; color: #e05c2a; text-decoration: none; }
+    .logo span { color: #1a1a2e; }
+    .nav-links { list-style: none; display: flex; gap: 40px; }
+    .nav-links a { text-decoration: none; color: #444; font-size: 20px; }
+    .nav-links a:hover { color: #e05c2a; }
+    .nav-buttons { display: flex; gap: 14px; }
+    .btn-login {
+      padding: 14px 30px; border: 2px solid #e05c2a;
+      background: transparent; color: #e05c2a;
+      border-radius: 8px; font-size: 18px; cursor: pointer;
+    }
+    .btn-signup {
+      padding: 14px 30px; border: none;
+      background: #e05c2a; color: #fff;
+      border-radius: 8px; font-size: 18px; cursor: pointer;
+    }
+    .btn-login:hover { background: #fff5f0; }
+    .btn-signup:hover { background: #c44d20; }
+
+    .page-header {
+      background: linear-gradient(135deg, #0f6e56 0%, #1d9e75 100%);
+      padding: 80px 100px;
+      text-align: center;
+    }
+    .page-header h1 { font-size: 62px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+    .page-header p { font-size: 26px; color: rgba(255,255,255,0.85); }
+
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 40px 100px;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      flex-wrap: wrap;
+    }
+    .filter-search {
+      padding: 20px 28px; border: 2px solid #ddd;
+      border-radius: 12px; font-size: 22px;
+      width: 420px; outline: none;
+    }
+    .filter-search:focus { border-color: #1d9e75; }
+    .filter-tags { display: flex; gap: 16px; flex-wrap: wrap; }
+    .filter-tags span {
+      padding: 18px 36px; border: 2px solid #ddd;
+      border-radius: 40px; font-size: 22px;
+      cursor: pointer; color: #555;
+    }
+    .filter-tags span:hover,
+    .filter-tags span.active {
+      border-color: #1d9e75; color: #1d9e75; background: #e8f5ee;
+    }
+
+    .rss-list {
+      padding: 50px 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      width: 100%;
+    }
+
+    .rss-card {
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 44px 52px;
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      transition: all 0.2s;
+    }
+    .rss-card:hover {
+      border-color: #1d9e75;
+      transform: translateX(6px);
+    }
+
+    .rss-rank {
+      font-size: 48px;
+      font-weight: 700;
+      color: #1d9e75;
+      min-width: 64px;
+      text-align: center;
+    }
+
+    .rss-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 14px;
+      background: #e8f5ee;
+      border: 2px solid #1d9e75;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 700;
+      color: #1d9e75;
+      flex-shrink: 0;
+    }
+
+    .rss-info { flex: 1; }
+    .rss-info h3 { font-size: 30px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; }
+    .rss-info p { font-size: 22px; color: #666; margin-bottom: 16px; }
+
+    .rss-url {
+      font-size: 16px;
+      color: #1d9e75;
+      margin-bottom: 10px;
+      word-break: break-all;
+    }
+
+    .rss-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .rss-meta span {
+      font-size: 18px; color: #888;
+      background: #f7f8fa;
+      padding: 8px 20px; border-radius: 20px;
+    }
+
+    .btn-follow {
+      padding: 18px 44px;
+      background: #1d9e75;
+      color: #fff; border: none;
+      border-radius: 12px; font-size: 20px;
+      cursor: pointer; white-space: nowrap; font-weight: 600;
+    }
+    .btn-follow:hover { background: #0f6e56; }
+    .btn-follow.following {
+      background: #fff;
+      color: #1d9e75;
+      border: 2px solid #1d9e75;
+    }
+    .btn-follow.following:hover { background: #e8f5ee; }
+
+    #toast {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      background: #1a1a2e;
+      color: #fff;
+      padding: 18px 32px;
+      border-radius: 12px;
+      font-size: 20px;
+      display: none;
+      z-index: 9999;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+  <a href="/" class="logo">Feed<span>Hub</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/blogs">Blogs</a></li>
+    <li><a href="/podcasts">Podcasts</a></li>
+    <li><a href="/youtube">YouTube</a></li>
+    <li><a href="/rss">RSS Feeds</a></li>
+    {% if current_user.is_authenticated %}
+    <li><a href="/myfeeds">My Feeds</a></li>
+    {% endif %}
+  </ul>
+  <div class="nav-buttons">
+    {% if current_user.is_authenticated %}
+      <a href="/dashboard" class="btn-login">← Dashboard</a>
+      <a href="/logout" class="btn-signup">Logout</a>
+    {% else %}
+      <a href="/login" class="btn-login">Log in</a>
+      <a href="/register" class="btn-signup">Sign up free</a>
+    {% endif %}
+  </div>
+</nav>
+  <section class="page-header">
+    <h1>Top RSS Feeds</h1>
+    <p>The most popular RSS feeds to stay updated instantly</p>
+  </section>
+
+  <section class="filter-bar">
+    <input type="text" id="searchInput" placeholder="Search RSS feeds..."
+           class="filter-search" onkeyup="searchFeeds()"/>
+    <div class="filter-tags">
+      <span class="active" onclick="filterCategory(this, 'all')">All</span>
+      <span onclick="filterCategory(this, 'Technology')">Technology</span>
+      <span onclick="filterCategory(this, 'Business')">Business</span>
+      <span onclick="filterCategory(this, 'Science')">Science</span>
+      <span onclick="filterCategory(this, 'News')">News</span>
+      <span onclick="filterCategory(this, 'Design')">Design</span>
+    </div>
+  </section>
+
+  <section class="rss-list">
+    {% for feed in feeds %}
+    <div class="rss-card" data-category="{{ feed.category }}">
+      <div class="rss-rank">{{ loop.index }}</div>
+      <div class="rss-avatar">{{ feed.name[:2].upper() }}</div>
+      <div class="rss-info">
+        <h3>{{ feed.name }}</h3>
+        <p class="rss-url">{{ feed.url }}</p>
+        <p>{{ feed.description }}</p>
+        <div class="rss-meta">
+          <span>{{ feed.category }}</span>
+        </div>
+      </div>
+      {% if current_user.is_authenticated %}
+        <button class="btn-follow {% if feed.id in followed_ids %}following{% endif %}"
+          onclick="toggleFollow({{ feed.id }}, this)">
+          {% if feed.id in followed_ids %}Following{% else %}Follow{% endif %}
+        </button>
+      {% else %}
+        <a href="/login"><button class="btn-follow">Follow</button></a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </section>
+
+  <div id="toast"></div>
+
+  <script>
+    function searchFeeds() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.rss-card');
+      cards.forEach(card => {
+        const name = card.querySelector('h3').textContent.toLowerCase();
+        const desc = card.querySelector('p').textContent.toLowerCase();
+        card.style.display = (name.includes(query) || desc.includes(query)) ? 'flex' : 'none';
+      });
+    }
+
+    function filterCategory(el, category) {
+      document.querySelectorAll('.filter-tags span').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      const cards = document.querySelectorAll('.rss-card');
+      cards.forEach(card => {
+        const cat = card.dataset.category;
+        card.style.display = (category === 'all' || cat === category) ? 'flex' : 'none';
+      });
+    }
+
+    function toggleFollow(feedId, btn) {
+      fetch('/follow/' + feedId, { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'followed') {
+            btn.textContent = 'Following';
+            btn.classList.add('following');
+            showToast('Added to your feed!');
+          } else {
+            btn.textContent = 'Follow';
+            btn.classList.remove('following');
+            showToast('Removed from your feed!');
+          }
+        });
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+  </script>
+
+</body>
+</html>
