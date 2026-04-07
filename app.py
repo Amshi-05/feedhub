@@ -44,7 +44,7 @@ def get_cached_articles(feeds):
 
 # ===== APP SETUP =====
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'feedhub-secret-123'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'feedhub-secret-123')
 import os
 database_url = os.environ.get('DATABASE_URL', 'sqlite:///feedhub.db')
 if database_url.startswith('postgres://'):
