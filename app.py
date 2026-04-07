@@ -441,8 +441,10 @@ def api_counts():
         "rss": len(rss),
         "articles": len(blogs) + len(rss)
     })
+# Initialize database for Render deployment
+with app.app_context():
+    db.create_all()
+    seed_data()
+
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-        seed_data()
     app.run(debug=True)
