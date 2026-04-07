@@ -112,6 +112,7 @@ def main_app():
     feeds_rss = Feed.query.filter_by(feed_type="rss").all()
 
     followed_ids = []
+
     followed_blogs = []
     followed_podcasts = []
     followed_youtube = []
@@ -124,8 +125,8 @@ def main_app():
         followed_podcasts = [f for f in current_user.followed if f.feed_type == "podcast"]
         followed_youtube = [f for f in current_user.followed if f.feed_type == "youtube"]
         followed_rss = [f for f in current_user.followed if f.feed_type == "rss"]
-        rss_feeds = [f for f in current_user.followed if f.feed_type in ["rss", "blog"]]
-        articles = get_cached_articles(rss_feeds)
+        article_feeds = [f for f in current_user.followed if f.feed_type in ['blog', 'rss']]
+        articles = get_cached_articles(article_feeds)        articles = get_cached_articles(rss_feeds)
 
     return render_template("main.html",
         feeds_blog=feeds_blog,
