@@ -56,6 +56,23 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+import threading
+
+def background_fetch():
+    while True:
+        try:
+            with app.app_context():
+                all_feeds = Feed.query.filter(
+                    Feed.feed_type.in_(['blog', 'rss'])
+                ).all()
+                if all_feeds:
+                    get_cached_articles(all_feeds)
+        except Exception as e:
+            print(f"Background fetch error: {e}")
+        threading.Event().wait(900)
+
+fetch_thread = threading.Thread(target=background_fetch, daemon=True)
+fetch_thread.start()
 # ===== MODELS =====
 follows = db.Table('follows',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
