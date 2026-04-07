@@ -291,8 +291,16 @@ body.dark .dark-toggle { background: #2d2d4e; }
 .btn-unfollow:hover { background: #fff5f0; }
 
 /* ===== LOGIN/REGISTER ===== */
-.auth-page { min-height: calc(100vh - 68px); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #fff5f0, #f0f4ff); padding: 40px; transition: background 0.3s; }
-.auth-box { background: #fff; border-radius: 20px; padding: 48px; width: 100%; max-width: 460px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); transition: background 0.3s; }
+.auth-page {
+  min-height: calc(100vh - 68px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff5f0, #f0f4ff);
+  padding: 40px;
+  padding-top: 60px;
+  transition: background 0.3s;
+}.auth-box { background: #fff; border-radius: 20px; padding: 48px; width: 100%; max-width: 460px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); transition: background 0.3s; }
 .auth-box h2 { font-size: 30px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; transition: color 0.3s; }
 .auth-box p { font-size: 15px; color: #888; margin-bottom: 30px; }
 .form-group { margin-bottom: 20px; }
