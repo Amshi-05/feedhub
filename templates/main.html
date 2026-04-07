@@ -6,23 +6,107 @@
 <title>FeedHub - Discover the Best Content</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
+body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.6; transition: background 0.3s, color 0.3s; }
 
-/* NAVBAR */
+/* ===== DARK MODE ===== */
+body.dark { background: #0f0f1a; color: #eee; }
+body.dark .navbar { background: #1a1a2e; border-color: #2d2d4e; }
+body.dark .logo span { color: #fff; }
+body.dark .nav-links li span, body.dark .nav-links li a { color: #ccc; }
+body.dark .nav-links li span:hover, body.dark .nav-links li a:hover { background: #2d2d4e; color: #e05c2a; }
+body.dark .hero { background: linear-gradient(135deg, #1a1a2e, #2d3561); }
+body.dark .hero h1 { color: #fff; }
+body.dark .hero p { color: #aaa; }
+body.dark .hero-search { background: #2a2a40; }
+body.dark .hero-search input { background: #2a2a40; color: #fff; }
+body.dark .hero-tags span { background: #2a2a40; border-color: #444; color: #ccc; }
+body.dark .features-section { background: #0f0f1a; }
+body.dark .features-section h2 { color: #fff; }
+body.dark .feature-card { background: #1e1e30; border-color: #333; }
+body.dark .feature-card h3 { color: #fff; }
+body.dark .feature-card p { color: #aaa; }
+body.dark .featured-section { background: #1a1a2e; }
+body.dark .section-title { color: #fff; }
+body.dark .featured-card { background: #1e1e30; border-color: #333; }
+body.dark .featured-card h4 { color: #fff; }
+body.dark .featured-card p { color: #aaa; }
+body.dark .trending-section { background: #1a1a2e; }
+body.dark .trending-card { background: #1e1e30; border-color: #333; }
+body.dark .trending-info h4 { color: #fff; }
+body.dark .trending-info p { color: #aaa; }
+body.dark .page-section { background: #0f0f1a; }
+body.dark .content-area { background: #0f0f1a; }
+body.dark .search-filter input { background: #1e1e30; border-color: #444; color: #fff; }
+body.dark .chip { background: #1e1e30; border-color: #444; color: #ccc; }
+body.dark .feed-card { background: #1e1e30; border-color: #333; }
+body.dark .feed-info h3 { color: #fff; }
+body.dark .feed-info p { color: #aaa; }
+body.dark .feed-cat { background: #2a2a40; color: #aaa; }
+body.dark .btn-visit { background: #2a2a40; border-color: #444; color: #ccc; }
+body.dark .results-count { color: #aaa; }
+body.dark .no-results { color: #aaa; }
+body.dark .dash-stats { background: #1a1a2e; border-color: #333; }
+body.dark .dstat { background: #1e1e30; border-color: #333; }
+body.dark .dstat-info p { color: #aaa; }
+body.dark .dash-content { background: #0f0f1a; }
+body.dark .dash-section-title { color: #fff; border-color: #333; }
+body.dark .followed-card { background: #1e1e30; border-color: #333; }
+body.dark .followed-card h4 { color: #fff; }
+body.dark .followed-card p { color: #aaa; }
+body.dark .myfeeds-layout { background: #0f0f1a; }
+body.dark .mf-sidebar { background: #1a1a2e; border-color: #333; }
+body.dark .mf-sidebar-title { color: #666; }
+body.dark .mf-item { color: #ccc; }
+body.dark .mf-item:hover { background: #2d2d4e; }
+body.dark .mf-item.active { background: #2d2d4e; }
+body.dark .mf-count { background: #2a2a40; color: #aaa; }
+body.dark .mf-main { background: #0f0f1a; }
+body.dark .mf-main h2 { color: #fff; }
+body.dark .mf-search-bar input { background: #1e1e30; border-color: #444; color: #fff; }
+body.dark .article-card { background: #1e1e30; border-color: #333; }
+body.dark .article-card h3 { color: #fff; }
+body.dark .article-card p { color: #aaa; }
+body.dark .article-type { background: #2a2a40; color: #aaa; }
+body.dark .followed-feed-card { background: #1e1e30; border-color: #333; }
+body.dark .followed-feed-card h4 { color: #fff; }
+body.dark .followed-feed-card p { color: #aaa; }
+body.dark .auth-page { background: linear-gradient(135deg, #0f0f1a, #1a1a2e); }
+body.dark .auth-box { background: #1e1e30; }
+body.dark .auth-box h2 { color: #fff; }
+body.dark .auth-box p { color: #aaa; }
+body.dark .form-group label { color: #ccc; }
+body.dark .form-group input { background: #2a2a40; border-color: #444; color: #fff; }
+body.dark .auth-switch { color: #aaa; }
+body.dark .empty-state h3 { color: #fff; }
+body.dark .empty-state { color: #aaa; }
+body.dark .nav-user { color: #fff !important; }
+
+/* ===== LOADING ===== */
+.loading-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(255,255,255,0.95); z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 16px; transition: opacity 0.5s;
+}
+body.dark .loading-overlay { background: rgba(15,15,26,0.95); }
+.loading-overlay.hidden { opacity: 0; pointer-events: none; }
+.loader {
+  width: 50px; height: 50px; border: 4px solid #f0f0f0;
+  border-top-color: #e05c2a; border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.loading-overlay p { font-size: 16px; color: #888; font-weight: 600; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== NAVBAR ===== */
 .navbar {
-  background: #fff;
-  border-bottom: 2px solid #e5e7eb;
-  height: 68px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  position: sticky;
-  top: 0;
-  z-index: 999;
+  background: #fff; border-bottom: 2px solid #e5e7eb;
+  height: 68px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 40px;
+  position: sticky; top: 0; z-index: 999; transition: background 0.3s;
 }
 .logo { font-size: 26px; font-weight: 800; color: #e05c2a; text-decoration: none; cursor: pointer; }
-.logo span { color: #1a1a2e; }
+.logo span { color: #1a1a2e; transition: color 0.3s; }
 .nav-links { list-style: none; display: flex; gap: 6px; }
 .nav-links li a, .nav-links li span {
   text-decoration: none; color: #444; font-size: 14px;
@@ -34,46 +118,20 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
   background: #fff5f0; color: #e05c2a; font-weight: 600;
 }
 .nav-buttons { display: flex; gap: 10px; align-items: center; }
-.btn-login {
-  padding: 8px 18px; border: 2px solid #e05c2a;
-  background: transparent; color: #e05c2a;
-  border-radius: 8px; font-size: 14px; cursor: pointer; text-decoration: none;
-}
-.btn-signup {
-  padding: 8px 18px; border: none;
-  background: #e05c2a; color: #fff;
-  border-radius: 8px; font-size: 14px; cursor: pointer; text-decoration: none;
-}
-.btn-admin {
-  padding: 8px 18px; border: none;
-  background: #1a1a2e; color: #fff;
-  border-radius: 8px; font-size: 14px; cursor: pointer; text-decoration: none;
-}
+.btn-login { padding: 8px 18px; border: 2px solid #e05c2a; background: transparent; color: #e05c2a; border-radius: 8px; font-size: 14px; cursor: pointer; text-decoration: none; }
+.btn-signup { padding: 8px 18px; border: none; background: #e05c2a; color: #fff; border-radius: 8px; font-size: 14px; cursor: pointer; text-decoration: none; }
+.btn-admin { padding: 8px 18px; border: none; background: #1a1a2e; color: #fff; border-radius: 8px; font-size: 14px; cursor: pointer; text-decoration: none; }
 .nav-user { font-size: 14px; color: #555; font-weight: 600; }
-
-/* BACK BUTTON */
-.back-btn {
-  position: fixed;
-  top: 80px;
-  left: 20px;
-  background: #fff;
-  border: 2px solid #e05c2a;
-  color: #e05c2a;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  z-index: 998;
-  display: none;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  transition: all 0.2s;
+.dark-toggle {
+  background: #f0f0f0; border: none; border-radius: 50%;
+  width: 38px; height: 38px; font-size: 18px;
+  cursor: pointer; transition: all 0.3s;
+  display: flex; align-items: center; justify-content: center;
 }
-.back-btn:hover { background: #e05c2a; color: #fff; }
+body.dark .dark-toggle { background: #2d2d4e; }
+.dark-toggle:hover { transform: scale(1.1); }
 
-/* TOAST */
+/* ===== TOAST ===== */
 .toast {
   position: fixed; bottom: 30px; right: 30px;
   background: #1a1a2e; color: #fff;
@@ -84,283 +142,177 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
 }
 .toast.show { opacity: 1; }
 
-/* ===== HOME PAGE ===== */
+/* ===== HOME ===== */
 .hero {
   background: linear-gradient(135deg, #fff5f0 0%, #f0f4ff 100%);
-  padding: 80px 60px;
-  text-align: center;
+  padding: 80px 60px; text-align: center; transition: background 0.3s;
 }
-.hero h1 { font-size: 52px; font-weight: 800; color: #1a1a2e; margin-bottom: 16px; line-height: 1.2; }
+.hero h1 { font-size: 52px; font-weight: 800; color: #1a1a2e; margin-bottom: 16px; line-height: 1.2; transition: color 0.3s; }
 .hero h1 span { color: #e05c2a; }
-.hero p { font-size: 20px; color: #666; margin-bottom: 36px; }
+.hero p { font-size: 20px; color: #666; margin-bottom: 36px; transition: color 0.3s; }
 .hero-search {
   display: flex; gap: 12px; max-width: 600px;
   margin: 0 auto 28px; background: #fff;
   border-radius: 14px; padding: 8px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: background 0.3s;
 }
-.hero-search input {
-  flex: 1; border: none; outline: none;
-  font-size: 16px; padding: 10px 16px; color: #333;
-}
-.hero-search button {
-  background: #e05c2a; color: #fff; border: none;
-  padding: 12px 28px; border-radius: 10px;
-  font-size: 16px; font-weight: 700; cursor: pointer;
-}
+.hero-search input { flex: 1; border: none; outline: none; font-size: 16px; padding: 10px 16px; color: #333; background: transparent; }
+.hero-search button { background: #e05c2a; color: #fff; border: none; padding: 12px 28px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.hero-search button:hover { background: #c44d20; }
 .hero-tags { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-.hero-tags span {
-  padding: 10px 22px; background: #fff;
-  border: 2px solid #e5e7eb; border-radius: 30px;
-  font-size: 15px; cursor: pointer; color: #555;
-  transition: all 0.2s; font-weight: 500;
-}
+.hero-tags span { padding: 10px 22px; background: #fff; border: 2px solid #e5e7eb; border-radius: 30px; font-size: 15px; cursor: pointer; color: #555; transition: all 0.2s; font-weight: 500; }
 .hero-tags span:hover { border-color: #e05c2a; color: #e05c2a; background: #fff5f0; }
-.features-section { padding: 60px; text-align: center; }
-.features-section h2 { font-size: 36px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; }
-.features-section p { font-size: 18px; color: #888; margin-bottom: 40px; }
-.feature-cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
-.feature-card {
-  background: #fff; border-radius: 16px; padding: 32px 24px;
-  cursor: pointer; transition: all 0.2s; border: 2px solid #f0f0f0; text-align: center;
-}
-.feature-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); border-color: #e05c2a; }
-.feature-card .icon { font-size: 40px; margin-bottom: 14px; }
-.feature-card h3 { font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
-.feature-card p { font-size: 15px; color: #888; }
+
+/* FEATURED */
+.featured-section { padding: 50px 60px; background: #fff; transition: background 0.3s; }
+.section-title { font-size: 28px; font-weight: 800; color: #1a1a2e; margin-bottom: 8px; transition: color 0.3s; }
+.section-subtitle { font-size: 16px; color: #888; margin-bottom: 30px; }
+.featured-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+.featured-card { background: #f7f8fa; border-radius: 14px; padding: 20px; border: 2px solid #f0f0f0; cursor: pointer; transition: all 0.2s; text-align: center; }
+.featured-card:hover { border-color: #e05c2a; transform: translateY(-4px); box-shadow: 0 8px 24px rgba(224,92,42,0.12); }
+.featured-avatar { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; margin: 0 auto 12px; background: linear-gradient(135deg, #e05c2a, #f0845a); color: #fff; }
+.featured-card h4 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; transition: color 0.3s; }
+.featured-card p { font-size: 13px; color: #888; margin-bottom: 12px; }
+.featured-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #fff0ea; color: #e05c2a; }
+
+/* TRENDING */
+.trending-section { padding: 50px 60px; background: linear-gradient(135deg, #f8f9ff, #fff5f0); transition: background 0.3s; }
+.trending-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 24px; }
+.trending-card { background: #fff; border-radius: 14px; padding: 20px; border: 2px solid #f0f0f0; display: flex; align-items: center; gap: 14px; transition: all 0.2s; cursor: pointer; }
+.trending-card:hover { border-color: #e05c2a; transform: translateX(4px); }
+.trending-rank { font-size: 24px; font-weight: 800; color: #e05c2a; min-width: 36px; text-align: center; }
+.trending-info h4 { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 3px; transition: color 0.3s; }
+.trending-info p { font-size: 12px; color: #888; }
+.trending-fire { font-size: 18px; margin-left: auto; }
+
+/* FEATURES */
+.features-section { padding: 50px 60px; text-align: center; transition: background 0.3s; }
+.features-section h2 { font-size: 32px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; transition: color 0.3s; }
+.features-section p { font-size: 16px; color: #888; margin-bottom: 36px; }
+.feature-cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; max-width: 1100px; margin: 0 auto; }
+.feature-card { background: #fff; border-radius: 16px; padding: 28px 20px; cursor: pointer; transition: all 0.25s; border: 2px solid #f0f0f0; text-align: center; }
+.feature-card:hover { transform: translateY(-6px); box-shadow: 0 12px 36px rgba(0,0,0,0.1); border-color: #e05c2a; }
+.feature-card .icon { font-size: 38px; margin-bottom: 12px; }
+.feature-card h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; transition: color 0.3s; }
+.feature-card p { font-size: 13px; color: #888; }
 
 /* ===== FEED PAGES ===== */
-.page-header {
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
-  color: #fff; padding: 50px 60px;
-}
+.page-header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: #fff; padding: 50px 60px; }
 .page-header h1 { font-size: 44px; font-weight: 800; margin-bottom: 8px; }
 .page-header p { font-size: 18px; opacity: 0.8; }
-
 .page-header.podcast-header { background: linear-gradient(135deg, #2d1b69, #6c3fc5); }
 .page-header.youtube-header { background: linear-gradient(135deg, #8b0000, #cc0000); }
 .page-header.rss-header { background: linear-gradient(135deg, #0a4a35, #1d9e75); }
 
-.content-area { padding: 30px 60px; }
-.search-filter {
-  display: flex; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; align-items: center;
-}
-.search-filter input {
-  flex: 1; min-width: 280px; padding: 14px 18px;
-  border: 2px solid #e5e7eb; border-radius: 12px;
-  font-size: 15px; outline: none;
-}
+.content-area { padding: 30px 60px; transition: background 0.3s; }
+.search-filter { display: flex; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
+.search-filter input { flex: 1; min-width: 280px; padding: 14px 18px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 15px; outline: none; transition: all 0.2s; }
 .search-filter input:focus { border-color: #e05c2a; }
 .filter-chips { display: flex; gap: 10px; flex-wrap: wrap; }
-.chip {
-  padding: 10px 20px; border: 2px solid #e5e7eb;
-  border-radius: 30px; font-size: 14px;
-  cursor: pointer; color: #555; background: #fff; transition: all 0.2s;
-}
+.chip { padding: 10px 20px; border: 2px solid #e5e7eb; border-radius: 30px; font-size: 14px; cursor: pointer; color: #555; background: #fff; transition: all 0.2s; }
 .chip:hover, .chip.active { background: #e05c2a; color: #fff; border-color: #e05c2a; }
-
 .results-count { font-size: 15px; color: #888; margin-bottom: 20px; }
 
 .feed-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-.feed-card {
-  background: #fff; border-radius: 16px; padding: 24px;
-  border: 2px solid #f0f0f0; transition: all 0.2s;
-  display: flex; align-items: flex-start; gap: 16px;
-}
+.feed-card { background: #fff; border-radius: 16px; padding: 24px; border: 2px solid #f0f0f0; transition: all 0.2s; display: flex; align-items: flex-start; gap: 16px; animation: fadeInUp 0.4s ease both; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 .feed-card:hover { border-color: #e05c2a; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
-.feed-rank {
-  font-size: 28px; font-weight: 800; color: #e0e0e0;
-  min-width: 40px; text-align: center; margin-top: 4px;
-}
+.feed-rank { font-size: 28px; font-weight: 800; color: #e0e0e0; min-width: 40px; text-align: center; margin-top: 4px; }
 .feed-body { flex: 1; }
-.feed-info h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+.feed-info h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; transition: color 0.3s; }
 .feed-info p { font-size: 14px; color: #888; margin-bottom: 14px; line-height: 1.5; }
 .feed-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.feed-cat {
-  padding: 4px 12px; background: #f0f0f0;
-  border-radius: 20px; font-size: 12px; color: #666;
-}
-.btn-follow {
-  padding: 10px 20px; background: #e05c2a; color: #fff;
-  border: none; border-radius: 10px; font-size: 14px;
-  cursor: pointer; font-weight: 700; transition: all 0.2s; margin-left: auto;
-}
-.btn-follow:hover { background: #c44d20; }
-.btn-follow.following {
-  background: #fff; color: #e05c2a;
-  border: 2px solid #e05c2a;
-}
-.btn-visit {
-  padding: 10px 16px; background: #f7f8fa; color: #555;
-  border: 2px solid #e5e7eb; border-radius: 10px;
-  font-size: 13px; cursor: pointer; text-decoration: none;
-  font-weight: 600; transition: all 0.2s;
-}
+.feed-cat { padding: 4px 12px; background: #f0f0f0; border-radius: 20px; font-size: 12px; color: #666; }
+.btn-follow { padding: 10px 20px; background: #e05c2a; color: #fff; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; font-weight: 700; transition: all 0.2s; margin-left: auto; }
+.btn-follow:hover { background: #c44d20; transform: scale(1.03); }
+.btn-follow.following { background: #fff; color: #e05c2a; border: 2px solid #e05c2a; }
+.btn-follow.following:hover { background: #fff5f0; }
+.btn-visit { padding: 10px 16px; background: #f7f8fa; color: #555; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 13px; cursor: pointer; text-decoration: none; font-weight: 600; transition: all 0.2s; }
 .btn-visit:hover { background: #e5e7eb; }
 .no-results { text-align: center; padding: 60px; color: #888; font-size: 18px; display: none; }
 
 /* ===== DASHBOARD ===== */
-.dash-banner {
-  background: linear-gradient(135deg, #1a1a2e, #e05c2a);
-  color: #fff; padding: 50px 60px;
-}
+.dash-banner { background: linear-gradient(135deg, #1a1a2e, #e05c2a); color: #fff; padding: 50px 60px; }
 .dash-banner h1 { font-size: 40px; font-weight: 800; margin-bottom: 8px; }
 .dash-banner p { font-size: 18px; opacity: 0.85; }
-.dash-stats {
-  display: flex; gap: 20px; padding: 30px 60px;
-  background: #fff; border-bottom: 2px solid #f0f0f0; flex-wrap: wrap;
-}
-.dstat {
-  flex: 1; min-width: 140px; background: #f7f8fa;
-  border-radius: 14px; padding: 20px 24px;
-  display: flex; align-items: center; gap: 16px;
-  border: 2px solid #f0f0f0;
-}
+.dash-stats { display: flex; gap: 20px; padding: 30px 60px; background: #fff; border-bottom: 2px solid #f0f0f0; flex-wrap: wrap; transition: background 0.3s; }
+.dstat { flex: 1; min-width: 140px; background: #f7f8fa; border-radius: 14px; padding: 20px 24px; display: flex; align-items: center; gap: 16px; border: 2px solid #f0f0f0; transition: all 0.3s; }
+.dstat:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
 .dstat-icon { font-size: 32px; }
 .dstat-info h3 { font-size: 30px; font-weight: 800; color: #e05c2a; }
 .dstat-info p { font-size: 14px; color: #888; }
-.dash-content { padding: 30px 60px; }
-.dash-section-title {
-  font-size: 22px; font-weight: 700; color: #1a1a2e;
-  margin-bottom: 20px; padding-bottom: 12px;
-  border-bottom: 2px solid #f0f0f0;
-}
+.dash-content { padding: 30px 60px; transition: background 0.3s; }
+.dash-section-title { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #f0f0f0; transition: color 0.3s; }
 .followed-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 40px; }
-.followed-card {
-  background: #fff; border-radius: 14px; padding: 20px;
-  border: 2px solid #f0f0f0; display: flex;
-  justify-content: space-between; align-items: center;
-  transition: all 0.2s;
-}
-.followed-card:hover { border-color: #e05c2a; }
-.followed-card h4 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+.followed-card { background: #fff; border-radius: 14px; padding: 20px; border: 2px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+.followed-card:hover { border-color: #e05c2a; transform: translateX(3px); }
+.followed-card h4 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; transition: color 0.3s; }
 .followed-card p { font-size: 13px; color: #888; }
-.btn-visit-sm {
-  padding: 10px 18px; background: #e05c2a; color: #fff;
-  border: none; border-radius: 8px; font-size: 13px;
-  cursor: pointer; text-decoration: none; font-weight: 600;
-}
+.btn-visit-sm { padding: 10px 18px; background: #e05c2a; color: #fff; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; text-decoration: none; font-weight: 600; transition: all 0.2s; }
+.btn-visit-sm:hover { background: #c44d20; }
 .empty-state { text-align: center; padding: 60px; color: #888; }
 .empty-state .icon { font-size: 60px; margin-bottom: 16px; }
-.empty-state h3 { font-size: 24px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; }
+.empty-state h3 { font-size: 24px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; transition: color 0.3s; }
 .empty-state p { font-size: 16px; margin-bottom: 24px; }
-.btn-explore {
-  padding: 14px 30px; background: #e05c2a; color: #fff;
-  border: none; border-radius: 12px; font-size: 16px;
-  cursor: pointer; font-weight: 700;
-}
+.btn-explore { padding: 14px 30px; background: #e05c2a; color: #fff; border: none; border-radius: 12px; font-size: 16px; cursor: pointer; font-weight: 700; transition: all 0.2s; }
+.btn-explore:hover { background: #c44d20; transform: scale(1.03); }
 
 /* ===== MY FEEDS ===== */
 .myfeeds-layout { display: flex; min-height: calc(100vh - 68px); }
-.mf-sidebar {
-  width: 220px; min-width: 220px; background: #fff;
-  border-right: 2px solid #f0f0f0; padding: 24px 0;
-  position: sticky; top: 68px; height: calc(100vh - 68px); overflow-y: auto;
-}
-.mf-sidebar-title {
-  font-size: 12px; font-weight: 700; color: #aaa;
-  text-transform: uppercase; letter-spacing: 1px;
-  padding: 0 20px 10px;
-}
-.mf-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 12px 20px; cursor: pointer; color: #444;
-  font-size: 15px; border-left: 3px solid transparent;
-  transition: all 0.15s;
-}
+.mf-sidebar { width: 220px; min-width: 220px; background: #fff; border-right: 2px solid #f0f0f0; padding: 24px 0; position: sticky; top: 68px; height: calc(100vh - 68px); overflow-y: auto; transition: background 0.3s; }
+.mf-sidebar-title { font-size: 12px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 1px; padding: 0 20px 10px; }
+.mf-item { display: flex; align-items: center; gap: 10px; padding: 12px 20px; cursor: pointer; color: #444; font-size: 15px; border-left: 3px solid transparent; transition: all 0.15s; }
 .mf-item:hover { background: #fff5f0; color: #e05c2a; border-left-color: #e05c2a; }
 .mf-item.active { background: #fff5f0; color: #e05c2a; border-left-color: #e05c2a; font-weight: 700; }
-.mf-count {
-  margin-left: auto; background: #f0f0f0; color: #666;
-  padding: 2px 8px; border-radius: 20px; font-size: 12px;
-}
-.mf-main { flex: 1; padding: 30px 40px; }
-.mf-search-bar {
-  display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;
-}
-.mf-search-bar input {
-  flex: 1; min-width: 250px; padding: 14px 18px;
-  border: 2px solid #e5e7eb; border-radius: 12px;
-  font-size: 15px; outline: none;
-}
-.mf-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.mf-count { margin-left: auto; background: #f0f0f0; color: #666; padding: 2px 8px; border-radius: 20px; font-size: 12px; }
+.mf-main { flex: 1; padding: 30px 40px; transition: background 0.3s; }
+.mf-search-bar { display: flex; gap: 12px; margin-bottom: 24px; }
+.mf-search-bar input { flex: 1; min-width: 250px; padding: 14px 18px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 15px; outline: none; transition: all 0.2s; }
+.mf-search-bar input:focus { border-color: #e05c2a; }
 
 .article-list { display: flex; flex-direction: column; gap: 16px; }
-.article-card {
-  background: #fff; border-radius: 16px; padding: 24px;
-  border: 2px solid #f0f0f0; transition: all 0.2s;
-}
-.article-card:hover { border-color: #e05c2a; box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+.article-card { background: #fff; border-radius: 16px; padding: 24px; border: 2px solid #f0f0f0; transition: all 0.2s; animation: fadeInUp 0.4s ease both; }
+.article-card:hover { border-color: #e05c2a; box-shadow: 0 4px 20px rgba(0,0,0,0.07); transform: translateY(-2px); }
 .article-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
-.article-source {
-  background: #e05c2a; color: #fff; padding: 4px 12px;
-  border-radius: 20px; font-size: 12px; font-weight: 700;
-}
-.article-type {
-  background: #f0f0f0; color: #666; padding: 4px 12px;
-  border-radius: 20px; font-size: 12px;
-}
+.article-source { background: #e05c2a; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.article-type { background: #f0f0f0; color: #666; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
 .article-date { font-size: 12px; color: #aaa; margin-left: auto; }
-.article-card h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; line-height: 1.4; }
+.article-card h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; line-height: 1.4; transition: color 0.3s; }
 .article-card p { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 14px; }
-.btn-read {
-  padding: 10px 20px; background: #e05c2a; color: #fff;
-  border: none; border-radius: 8px; font-size: 14px;
-  cursor: pointer; text-decoration: none; font-weight: 600;
-}
+.btn-read { padding: 10px 20px; background: #e05c2a; color: #fff; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; text-decoration: none; font-weight: 600; transition: all 0.2s; }
+.btn-read:hover { background: #c44d20; }
 
 .followed-feed-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
-.followed-feed-card {
-  background: #fff; border-radius: 14px; padding: 18px;
-  border: 2px solid #f0f0f0; display: flex;
-  justify-content: space-between; align-items: center; gap: 12px;
-}
-.followed-feed-card h4 { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 3px; }
+.followed-feed-card { background: #fff; border-radius: 14px; padding: 18px; border: 2px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: all 0.2s; }
+.followed-feed-card:hover { border-color: #e05c2a; }
+.followed-feed-card h4 { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 3px; transition: color 0.3s; }
 .followed-feed-card p { font-size: 13px; color: #888; }
-.btn-unfollow {
-  padding: 8px 14px; background: #fff; color: #e05c2a;
-  border: 2px solid #e05c2a; border-radius: 8px;
-  font-size: 13px; cursor: pointer; font-weight: 600;
-  white-space: nowrap;
-}
+.btn-unfollow { padding: 8px 14px; background: #fff; color: #e05c2a; border: 2px solid #e05c2a; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 600; white-space: nowrap; transition: all 0.2s; }
+.btn-unfollow:hover { background: #fff5f0; }
 
-/* ===== LOGIN / REGISTER ===== */
-.auth-page {
-  min-height: calc(100vh - 68px);
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #fff5f0, #f0f4ff);
-  padding: 40px;
-}
-.auth-box {
-  background: #fff; border-radius: 20px; padding: 48px;
-  width: 100%; max-width: 460px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-}
-.auth-box h2 { font-size: 30px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+/* ===== LOGIN/REGISTER ===== */
+.auth-page { min-height: calc(100vh - 68px); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #fff5f0, #f0f4ff); padding: 40px; transition: background 0.3s; }
+.auth-box { background: #fff; border-radius: 20px; padding: 48px; width: 100%; max-width: 460px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); transition: background 0.3s; }
+.auth-box h2 { font-size: 30px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; transition: color 0.3s; }
 .auth-box p { font-size: 15px; color: #888; margin-bottom: 30px; }
 .form-group { margin-bottom: 20px; }
-.form-group label { display: block; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 8px; }
-.form-group input {
-  width: 100%; padding: 14px 16px;
-  border: 2px solid #e5e7eb; border-radius: 12px;
-  font-size: 15px; outline: none; transition: border 0.2s;
-}
+.form-group label { display: block; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 8px; transition: color 0.3s; }
+.form-group input { width: 100%; padding: 14px 16px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 15px; outline: none; transition: all 0.2s; }
 .form-group input:focus { border-color: #e05c2a; }
-.btn-auth {
-  width: 100%; padding: 16px; background: #e05c2a;
-  color: #fff; border: none; border-radius: 12px;
-  font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 8px;
-}
+.btn-auth { width: 100%; padding: 16px; background: #e05c2a; color: #fff; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.2s; }
 .btn-auth:hover { background: #c44d20; }
 .auth-switch { text-align: center; margin-top: 20px; font-size: 15px; color: #666; }
 .auth-switch span { color: #e05c2a; cursor: pointer; font-weight: 700; }
-.auth-error { color: #e05c2a; font-size: 14px; margin-bottom: 16px; display: none; }
+.auth-error { color: #e05c2a; font-size: 14px; margin-bottom: 16px; display: none; background: #fff5f0; padding: 10px 14px; border-radius: 8px; border-left: 3px solid #e05c2a; }
 </style>
 </head>
 <body>
 
-<!-- BACK BUTTON -->
-<button class="back-btn" id="backBtn" onclick="goBack()">← Back</button>
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loader"></div>
+  <p>Loading FeedHub...</p>
+</div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
@@ -380,11 +332,10 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
     {% endif %}
   </ul>
   <div class="nav-buttons">
+    <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
     {% if current_user.is_authenticated %}
       <span class="nav-user">👤 {{ current_user.username }}</span>
-      {% if current_user.is_admin %}
-        <a href="/admin" class="btn-admin">⚙ Admin</a>
-      {% endif %}
+      {% if current_user.is_admin %}<a href="/admin" class="btn-admin">⚙ Admin</a>{% endif %}
       <a href="/logout" class="btn-signup">Logout</a>
     {% else %}
       <span onclick="showPage('login')" class="btn-login">Log in</span>
@@ -393,7 +344,7 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
   </div>
 </nav>
 
-<!-- ===== HOME PAGE ===== -->
+<!-- ===== HOME ===== -->
 <div class="page-section" id="page-home">
   <div class="hero">
     <h1>Discover the Best <span>Blogs,</span><br>Podcasts & More</h1>
@@ -404,43 +355,68 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
       <button onclick="heroSearchGo()">🔍 Search</button>
     </div>
     <div class="hero-tags">
-      <span onclick="showPage('blogs');filterBlog('Technology')">💻 Technology</span>
-      <span onclick="showPage('blogs');filterBlog('Business')">💼 Business</span>
-      <span onclick="showPage('blogs');filterBlog('Science')">🔬 Science</span>
-      <span onclick="showPage('blogs');filterBlog('Design')">🎨 Design</span>
-      <span onclick="showPage('blogs');filterBlog('Education')">📚 Education</span>
-      <span onclick="showPage('blogs');filterBlog('Health')">❤️ Health</span>
+      <span onclick="showPage('blogs');filterFeeds('blog','Technology')">💻 Technology</span>
+      <span onclick="showPage('blogs');filterFeeds('blog','Business')">💼 Business</span>
+      <span onclick="showPage('blogs');filterFeeds('blog','Science')">🔬 Science</span>
+      <span onclick="showPage('blogs');filterFeeds('blog','Design')">🎨 Design</span>
+      <span onclick="showPage('blogs');filterFeeds('blog','Education')">📚 Education</span>
+      <span onclick="showPage('blogs');filterFeeds('blog','Health')">❤️ Health</span>
     </div>
   </div>
+
+  <div class="featured-section">
+    <div class="section-title">⭐ Featured Feeds</div>
+    <div class="section-subtitle">Hand-picked top feeds across all categories</div>
+    <div class="featured-grid">
+      <div class="featured-card" onclick="showPage('blogs')">
+        <div class="featured-avatar">TC</div>
+        <h4>TechCrunch</h4><p>Latest tech news and startup stories</p>
+        <span class="featured-badge">BLOG</span>
+      </div>
+      <div class="featured-card" onclick="showPage('podcasts')">
+        <div class="featured-avatar" style="background:linear-gradient(135deg,#6c3fc5,#9b6af0)">LF</div>
+        <h4>Lex Fridman</h4><p>Conversations about AI and humanity</p>
+        <span class="featured-badge" style="background:#f5f0ff;color:#6c3fc5">PODCAST</span>
+      </div>
+      <div class="featured-card" onclick="showPage('youtube')">
+        <div class="featured-avatar" style="background:linear-gradient(135deg,#cc0000,#ff4444)">KZ</div>
+        <h4>Kurzgesagt</h4><p>Animated science and philosophy</p>
+        <span class="featured-badge" style="background:#fff0f0;color:#cc0000">YOUTUBE</span>
+      </div>
+      <div class="featured-card" onclick="showPage('rss')">
+        <div class="featured-avatar" style="background:linear-gradient(135deg,#1d9e75,#4ecba1)">BB</div>
+        <h4>BBC News</h4><p>International news from the BBC</p>
+        <span class="featured-badge" style="background:#e8f5ee;color:#1d9e75">RSS</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="trending-section">
+    <div class="section-title">🔥 Trending This Week</div>
+    <div class="section-subtitle">Most followed feeds right now</div>
+    <div class="trending-grid">
+      <div class="trending-card" onclick="showPage('blogs')"><div class="trending-rank">1</div><div class="trending-info"><h4>The Verge</h4><p>Technology · Blog</p></div><div class="trending-fire">🔥</div></div>
+      <div class="trending-card" onclick="showPage('youtube')"><div class="trending-rank">2</div><div class="trending-info"><h4>Veritasium</h4><p>Science · YouTube</p></div><div class="trending-fire">🔥</div></div>
+      <div class="trending-card" onclick="showPage('podcasts')"><div class="trending-rank">3</div><div class="trending-info"><h4>The Daily</h4><p>News · Podcast</p></div><div class="trending-fire">🔥</div></div>
+      <div class="trending-card" onclick="showPage('blogs')"><div class="trending-rank">4</div><div class="trending-info"><h4>Wired</h4><p>Technology · Blog</p></div><div class="trending-fire">⚡</div></div>
+      <div class="trending-card" onclick="showPage('youtube')"><div class="trending-rank">5</div><div class="trending-info"><h4>3Blue1Brown</h4><p>Education · YouTube</p></div><div class="trending-fire">⚡</div></div>
+      <div class="trending-card" onclick="showPage('rss')"><div class="trending-rank">6</div><div class="trending-info"><h4>The Guardian</h4><p>News · RSS</p></div><div class="trending-fire">⚡</div></div>
+    </div>
+  </div>
+
   <div class="features-section">
     <h2>Everything in One Place</h2>
     <p>All your favorite content sources, organized and ready</p>
     <div class="feature-cards">
-      <div class="feature-card" onclick="showPage('blogs')">
-        <div class="icon">📝</div>
-        <h3>Blogs</h3>
-        <p>Top blogs across technology, business, science and more</p>
-      </div>
-      <div class="feature-card" onclick="showPage('podcasts')">
-        <div class="icon">🎙️</div>
-        <h3>Podcasts</h3>
-        <p>Best podcasts from top creators worldwide</p>
-      </div>
-      <div class="feature-card" onclick="showPage('youtube')">
-        <div class="icon">▶️</div>
-        <h3>YouTube</h3>
-        <p>Top YouTube channels curated for you</p>
-      </div>
-      <div class="feature-card" onclick="showPage('rss')">
-        <div class="icon">📡</div>
-        <h3>RSS Feeds</h3>
-        <p>Stay updated with the latest news and content</p>
-      </div>
+      <div class="feature-card" onclick="showPage('blogs')"><div class="icon">📝</div><h3>Blogs</h3><p>Top blogs across technology, business, science and more</p></div>
+      <div class="feature-card" onclick="showPage('podcasts')"><div class="icon">🎙️</div><h3>Podcasts</h3><p>Best podcasts from top creators worldwide</p></div>
+      <div class="feature-card" onclick="showPage('youtube')"><div class="icon">▶️</div><h3>YouTube</h3><p>Top YouTube channels curated for you</p></div>
+      <div class="feature-card" onclick="showPage('rss')"><div class="icon">📡</div><h3>RSS Feeds</h3><p>Stay updated with the latest news and content</p></div>
     </div>
   </div>
 </div>
 
-<!-- ===== BLOGS PAGE ===== -->
+<!-- ===== BLOGS ===== -->
 <div class="page-section" id="page-blogs" style="display:none">
   <div class="page-header">
     <h1>📝 Top Blogs</h1>
@@ -449,7 +425,7 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
   <div class="content-area">
     <div class="search-filter">
       <input type="text" id="blogSearch" placeholder="Search blogs..." oninput="filterFeeds('blog')"/>
-      <div class="filter-chips" id="blogChips">
+      <div class="filter-chips">
         <span class="chip active" onclick="filterFeeds('blog','')">All</span>
         <span class="chip" onclick="filterFeeds('blog','Technology')">💻 Technology</span>
         <span class="chip" onclick="filterFeeds('blog','Business')">💼 Business</span>
@@ -462,19 +438,15 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
     <div class="results-count" id="blogCount"></div>
     <div class="feed-grid" id="blogGrid">
       {% for feed in feeds_blog %}
-      <div class="feed-card" data-name="{{ feed.name|lower }}" data-cat="{{ feed.category }}">
+      <div class="feed-card" data-name="{{ feed.name|lower }}" data-cat="{{ feed.category }}" style="animation-delay:{{ loop.index0 * 0.05 }}s">
         <div class="feed-rank">{{ loop.index }}</div>
         <div class="feed-body">
-          <div class="feed-info">
-            <h3>{{ feed.name }}</h3>
-            <p>{{ feed.description }}</p>
-          </div>
+          <div class="feed-info"><h3>{{ feed.name }}</h3><p>{{ feed.description }}</p></div>
           <div class="feed-meta">
             <span class="feed-cat">{{ feed.category }}</span>
             <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit">🔗 Visit</a>
             {% if current_user.is_authenticated %}
-              <button class="btn-follow {% if feed.id in followed_ids %}following{% endif %}"
-                      onclick="toggleFollow({{ feed.id }}, this)">
+              <button class="btn-follow {% if feed.id in followed_ids %}following{% endif %}" onclick="toggleFollow({{ feed.id }}, this)">
                 {% if feed.id in followed_ids %}✓ Following{% else %}+ Follow{% endif %}
               </button>
             {% else %}
@@ -489,7 +461,7 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
   </div>
 </div>
 
-<!-- ===== PODCASTS PAGE ===== -->
+<!-- ===== PODCASTS ===== -->
 <div class="page-section" id="page-podcasts" style="display:none">
   <div class="page-header podcast-header">
     <h1>🎙️ Top Podcasts</h1>
@@ -510,19 +482,15 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
     <div class="results-count" id="podCount"></div>
     <div class="feed-grid" id="podGrid">
       {% for feed in feeds_podcast %}
-      <div class="feed-card" data-name="{{ feed.name|lower }}" data-cat="{{ feed.category }}">
+      <div class="feed-card" data-name="{{ feed.name|lower }}" data-cat="{{ feed.category }}" style="animation-delay:{{ loop.index0 * 0.05 }}s">
         <div class="feed-rank" style="color:#c9b3f5">{{ loop.index }}</div>
         <div class="feed-body">
-          <div class="feed-info">
-            <h3>{{ feed.name }}</h3>
-            <p>{{ feed.description }}</p>
-          </div>
+          <div class="feed-info"><h3>{{ feed.name }}</h3><p>{{ feed.description }}</p></div>
           <div class="feed-meta">
             <span class="feed-cat">{{ feed.category }}</span>
             <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit">🔗 Visit</a>
             {% if current_user.is_authenticated %}
-              <button class="btn-follow {% if feed.id in followed_ids %}following{% endif %}"
-                      onclick="toggleFollow({{ feed.id }}, this)">
+              <button class="btn-follow {% if feed.id in followed_ids %}following{% endif %}" onclick="toggleFollow({{ feed.id }}, this)">
                 {% if feed.id in followed_ids %}✓ Following{% else %}+ Follow{% endif %}
               </button>
             {% else %}
@@ -533,11 +501,11 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
       </div>
       {% endfor %}
     </div>
-    <div class="no-results" id="podNoResults">No podcasts found matching your search.</div>
+    <div class="no-results" id="podNoResults">No podcasts found.</div>
   </div>
 </div>
 
-<!-- ===== YOUTUBE PAGE ===== -->
+<!-- ===== YOUTUBE ===== -->
 <div class="page-section" id="page-youtube" style="display:none">
   <div class="page-header youtube-header">
     <h1>▶️ Top YouTube Channels</h1>
@@ -556,19 +524,15 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
     <div class="results-count" id="ytCount"></div>
     <div class="feed-grid" id="ytGrid">
       {% for feed in feeds_youtube %}
-      <div class="feed-card" data-name="{{ feed.name|lower }}" data-cat="{{ feed.category }}">
+      <div class="feed-card" data-name="{{ feed.name|lower }}" data-cat="{{ feed.category }}" style="animation-delay:{{ loop.index0 * 0.05 }}s">
         <div class="feed-rank" style="color:#ffb3b3">{{ loop.index }}</div>
         <div class="feed-body">
-          <div class="feed-info">
-            <h3>{{ feed.name }}</h3>
-            <p>{{ feed.description }}</p>
-          </div>
+          <div class="feed-info"><h3>{{ feed.name }}</h3><p>{{ feed.description }}</p></div>
           <div class="feed-meta">
             <span class="feed-cat">{{ feed.category }}</span>
             <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit">🔗 Visit</a>
             {% if current_user.is_authenticated %}
-              <button class="btn-follow {% if feed.id in followed_ids %}following{% endif %}"
-                      onclick="toggleFollow({{ feed.id }}, this)">
+              <button class="btn-follow {% if feed.id in followed_ids %}following{% endif %}" onclick="toggleFollow({{ feed.id }}, this)">
                 {% if feed.id in followed_ids %}✓ Following{% else %}+ Follow{% endif %}
               </button>
             {% else %}
@@ -579,11 +543,11 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
       </div>
       {% endfor %}
     </div>
-    <div class="no-results" id="ytNoResults">No YouTube channels found matching your search.</div>
+    <div class="no-results" id="ytNoResults">No YouTube channels found.</div>
   </div>
 </div>
 
-<!-- ===== RSS PAGE ===== -->
+<!-- ===== RSS ===== -->
 <div class="page-section" id="page-rss" style="display:none">
   <div class="page-header rss-header">
     <h1>📡 RSS Feeds</h1>
@@ -601,19 +565,15 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
     <div class="results-count" id="rssCount"></div>
     <div class="feed-grid" id="rssGrid">
       {% for feed in feeds_rss %}
-      <div class="feed-card" data-name="{{ feed.name|lower }}" data-cat="{{ feed.category }}">
+      <div class="feed-card" data-name="{{ feed.name|lower }}" data-cat="{{ feed.category }}" style="animation-delay:{{ loop.index0 * 0.05 }}s">
         <div class="feed-rank" style="color:#a8e6cf">{{ loop.index }}</div>
         <div class="feed-body">
-          <div class="feed-info">
-            <h3>{{ feed.name }}</h3>
-            <p>{{ feed.description }}</p>
-          </div>
+          <div class="feed-info"><h3>{{ feed.name }}</h3><p>{{ feed.description }}</p></div>
           <div class="feed-meta">
             <span class="feed-cat">{{ feed.category }}</span>
             <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit">🔗 Visit</a>
             {% if current_user.is_authenticated %}
-              <button class="btn-follow {% if feed.id in followed_ids %}following{% endif %}"
-                      onclick="toggleFollow({{ feed.id }}, this)">
+              <button class="btn-follow {% if feed.id in followed_ids %}following{% endif %}" onclick="toggleFollow({{ feed.id }}, this)">
                 {% if feed.id in followed_ids %}✓ Following{% else %}+ Follow{% endif %}
               </button>
             {% else %}
@@ -624,11 +584,11 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
       </div>
       {% endfor %}
     </div>
-    <div class="no-results" id="rssNoResults">No RSS feeds found matching your search.</div>
+    <div class="no-results" id="rssNoResults">No RSS feeds found.</div>
   </div>
 </div>
 
-<!-- ===== MY FEEDS PAGE ===== -->
+<!-- ===== MY FEEDS ===== -->
 <div class="page-section" id="page-myfeeds" style="display:none">
   {% if current_user.is_authenticated %}
   <div class="myfeeds-layout">
@@ -646,13 +606,12 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
         <input type="text" id="mfSearch" placeholder="Search your feeds..." oninput="mfFilter()"/>
       </div>
 
-      <!-- ARTICLES -->
       <div id="mf-section-articles">
-        <h2 style="font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:20px;">📰 Live Articles</h2>
+        <h2 style="font-size:22px;font-weight:700;margin-bottom:20px;">📰 Live Articles</h2>
         {% if articles %}
         <div class="article-list">
           {% for article in articles %}
-          <div class="article-card">
+          <div class="article-card" style="animation-delay:{{ loop.index0 * 0.05 }}s">
             <div class="article-meta">
               <span class="article-source">{{ article.feed_name }}</span>
               <span class="article-type">{{ article.feed_type }}</span>
@@ -665,26 +624,17 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
           {% endfor %}
         </div>
         {% else %}
-        <div class="empty-state">
-          <div class="icon">📰</div>
-          <h3>No articles yet</h3>
-          <p>Follow some blogs or RSS feeds to see live articles here!</p>
-          <button class="btn-explore" onclick="showPage('blogs')">Explore Blogs</button>
-        </div>
+        <div class="empty-state"><div class="icon">📰</div><h3>No articles yet</h3><p>Follow some blogs or RSS feeds to see live articles here!</p><button class="btn-explore" onclick="showPage('blogs')">Explore Blogs</button></div>
         {% endif %}
       </div>
 
-      <!-- ALL FEEDS -->
       <div id="mf-section-all" style="display:none">
-        <h2 style="font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:20px;">📚 All Followed Feeds</h2>
+        <h2 style="font-size:22px;font-weight:700;margin-bottom:20px;">📚 All Followed Feeds</h2>
         {% if total > 0 %}
         <div class="followed-feed-grid" id="mfAllGrid">
           {% for feed in followed_blogs + followed_podcasts + followed_youtube + followed_rss %}
           <div class="followed-feed-card" data-name="{{ feed.name|lower }}">
-            <div>
-              <h4>{{ feed.name }}</h4>
-              <p>{{ feed.category }} · {{ feed.feed_type }}</p>
-            </div>
+            <div><h4>{{ feed.name }}</h4><p>{{ feed.category }} · {{ feed.feed_type }}</p></div>
             <div style="display:flex;gap:8px">
               <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
               <button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button>
@@ -693,27 +643,16 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
           {% endfor %}
         </div>
         {% else %}
-        <div class="empty-state">
-          <div class="icon">📚</div>
-          <h3>No feeds followed yet</h3>
-          <button class="btn-explore" onclick="showPage('blogs')">Explore Feeds</button>
-        </div>
+        <div class="empty-state"><div class="icon">📚</div><h3>No feeds followed yet</h3><button class="btn-explore" onclick="showPage('blogs')">Explore Feeds</button></div>
         {% endif %}
       </div>
 
-      <!-- BLOGS -->
       <div id="mf-section-blogs" style="display:none">
-        <h2 style="font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:20px;">📝 Followed Blogs</h2>
+        <h2 style="font-size:22px;font-weight:700;margin-bottom:20px;">📝 Followed Blogs</h2>
         {% if followed_blogs %}
         <div class="followed-feed-grid">
           {% for feed in followed_blogs %}
-          <div class="followed-feed-card">
-            <div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div>
-            <div style="display:flex;gap:8px">
-              <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
-              <button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button>
-            </div>
-          </div>
+          <div class="followed-feed-card"><div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div><div style="display:flex;gap:8px"><a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a><button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button></div></div>
           {% endfor %}
         </div>
         {% else %}
@@ -721,19 +660,12 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
         {% endif %}
       </div>
 
-      <!-- PODCASTS -->
       <div id="mf-section-podcasts" style="display:none">
-        <h2 style="font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:20px;">🎙️ Followed Podcasts</h2>
+        <h2 style="font-size:22px;font-weight:700;margin-bottom:20px;">🎙️ Followed Podcasts</h2>
         {% if followed_podcasts %}
         <div class="followed-feed-grid">
           {% for feed in followed_podcasts %}
-          <div class="followed-feed-card">
-            <div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div>
-            <div style="display:flex;gap:8px">
-              <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
-              <button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button>
-            </div>
-          </div>
+          <div class="followed-feed-card"><div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div><div style="display:flex;gap:8px"><a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a><button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button></div></div>
           {% endfor %}
         </div>
         {% else %}
@@ -741,19 +673,12 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
         {% endif %}
       </div>
 
-      <!-- YOUTUBE -->
       <div id="mf-section-youtube" style="display:none">
-        <h2 style="font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:20px;">▶️ Followed YouTube Channels</h2>
+        <h2 style="font-size:22px;font-weight:700;margin-bottom:20px;">▶️ Followed YouTube Channels</h2>
         {% if followed_youtube %}
         <div class="followed-feed-grid">
           {% for feed in followed_youtube %}
-          <div class="followed-feed-card">
-            <div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div>
-            <div style="display:flex;gap:8px">
-              <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
-              <button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button>
-            </div>
-          </div>
+          <div class="followed-feed-card"><div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div><div style="display:flex;gap:8px"><a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a><button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button></div></div>
           {% endfor %}
         </div>
         {% else %}
@@ -761,47 +686,29 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
         {% endif %}
       </div>
 
-      <!-- RSS -->
       <div id="mf-section-rss" style="display:none">
-        <h2 style="font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:20px;">📡 Followed RSS Feeds</h2>
+        <h2 style="font-size:22px;font-weight:700;margin-bottom:20px;">📡 Followed RSS Feeds</h2>
         {% if followed_rss %}
         <div class="followed-feed-grid">
           {% for feed in followed_rss %}
-          <div class="followed-feed-card">
-            <div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div>
-            <div style="display:flex;gap:8px">
-              <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
-              <button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button>
-            </div>
-          </div>
+          <div class="followed-feed-card"><div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div><div style="display:flex;gap:8px"><a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a><button class="btn-unfollow" onclick="unfollowFeed({{ feed.id }}, this)">Unfollow</button></div></div>
           {% endfor %}
         </div>
         {% else %}
         <div class="empty-state"><div class="icon">📡</div><h3>No RSS feeds followed</h3><button class="btn-explore" onclick="showPage('rss')">Explore RSS</button></div>
         {% endif %}
       </div>
-
     </div>
   </div>
   {% else %}
-  <div class="auth-page">
-    <div class="auth-box" style="text-align:center">
-      <div style="font-size:60px;margin-bottom:20px">📚</div>
-      <h2>Login Required</h2>
-      <p>Please log in to see your followed feeds</p>
-      <button class="btn-auth" onclick="showPage('login')">Log In</button>
-    </div>
-  </div>
+  <div class="auth-page"><div class="auth-box" style="text-align:center"><div style="font-size:60px;margin-bottom:20px">📚</div><h2>Login Required</h2><p>Please log in to see your followed feeds</p><button class="btn-auth" onclick="showPage('login')">Log In</button></div></div>
   {% endif %}
 </div>
 
 <!-- ===== DASHBOARD ===== -->
 <div class="page-section" id="page-dashboard" style="display:none">
   {% if current_user.is_authenticated %}
-  <div class="dash-banner">
-    <h1>👋 Welcome, {{ current_user.username }}!</h1>
-    <p>Here's an overview of your followed feeds</p>
-  </div>
+  <div class="dash-banner"><h1>👋 Welcome, {{ current_user.username }}!</h1><p>Here's an overview of your followed feeds</p></div>
   <div class="dash-stats">
     <div class="dstat"><div class="dstat-icon">📚</div><div class="dstat-info"><h3>{{ total }}</h3><p>Total Feeds</p></div></div>
     <div class="dstat"><div class="dstat-icon">📝</div><div class="dstat-info"><h3>{{ followed_blogs|length }}</h3><p>Blogs</p></div></div>
@@ -811,178 +718,152 @@ body { font-family: 'Segoe UI', sans-serif; background: #f7f8fa; zoom: 1.8; }
   </div>
   <div class="dash-content">
     {% if total == 0 %}
-    <div class="empty-state">
-      <div class="icon">🚀</div>
-      <h3>Start following feeds!</h3>
-      <p>Follow blogs, podcasts, YouTube channels and RSS feeds to see them here.</p>
-      <button class="btn-explore" onclick="showPage('blogs')">Explore Feeds</button>
-    </div>
+    <div class="empty-state"><div class="icon">🚀</div><h3>Start following feeds!</h3><p>Follow blogs, podcasts, YouTube channels and RSS feeds to see them here.</p><button class="btn-explore" onclick="showPage('blogs')">Explore Feeds</button></div>
     {% else %}
-    {% if followed_blogs %}
-    <div class="dash-section-title">📝 Blogs ({{ followed_blogs|length }})</div>
-    <div class="followed-grid">
-      {% for feed in followed_blogs %}
-      <div class="followed-card">
-        <div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div>
-        <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
-      </div>
-      {% endfor %}
-    </div>
-    {% endif %}
-    {% if followed_podcasts %}
-    <div class="dash-section-title">🎙️ Podcasts ({{ followed_podcasts|length }})</div>
-    <div class="followed-grid">
-      {% for feed in followed_podcasts %}
-      <div class="followed-card">
-        <div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div>
-        <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
-      </div>
-      {% endfor %}
-    </div>
-    {% endif %}
-    {% if followed_youtube %}
-    <div class="dash-section-title">▶️ YouTube ({{ followed_youtube|length }})</div>
-    <div class="followed-grid">
-      {% for feed in followed_youtube %}
-      <div class="followed-card">
-        <div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div>
-        <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
-      </div>
-      {% endfor %}
-    </div>
-    {% endif %}
-    {% if followed_rss %}
-    <div class="dash-section-title">📡 RSS Feeds ({{ followed_rss|length }})</div>
-    <div class="followed-grid">
-      {% for feed in followed_rss %}
-      <div class="followed-card">
-        <div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div>
-        <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
-      </div>
-      {% endfor %}
-    </div>
-    {% endif %}
+    {% if followed_blogs %}<div class="dash-section-title">📝 Blogs ({{ followed_blogs|length }})</div><div class="followed-grid">{% for feed in followed_blogs %}<div class="followed-card"><div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div><a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a></div>{% endfor %}</div>{% endif %}
+    {% if followed_podcasts %}<div class="dash-section-title">🎙️ Podcasts ({{ followed_podcasts|length }})</div><div class="followed-grid">{% for feed in followed_podcasts %}<div class="followed-card"><div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div><a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a></div>{% endfor %}</div>{% endif %}
+    {% if followed_youtube %}<div class="dash-section-title">▶️ YouTube ({{ followed_youtube|length }})</div><div class="followed-grid">{% for feed in followed_youtube %}<div class="followed-card"><div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div><a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a></div>{% endfor %}</div>{% endif %}
+    {% if followed_rss %}<div class="dash-section-title">📡 RSS Feeds ({{ followed_rss|length }})</div><div class="followed-grid">{% for feed in followed_rss %}<div class="followed-card"><div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div><a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a></div>{% endfor %}</div>{% endif %}
     {% endif %}
   </div>
   {% else %}
-  <div class="auth-page">
-    <div class="auth-box" style="text-align:center">
-      <div style="font-size:60px;margin-bottom:20px">📊</div>
-      <h2>Login Required</h2>
-      <p>Please log in to see your dashboard</p>
-      <button class="btn-auth" onclick="showPage('login')">Log In</button>
-    </div>
-  </div>
+  <div class="auth-page"><div class="auth-box" style="text-align:center"><div style="font-size:60px;margin-bottom:20px">📊</div><h2>Login Required</h2><p>Please log in to see your dashboard</p><button class="btn-auth" onclick="showPage('login')">Log In</button></div></div>
   {% endif %}
 </div>
 
-<!-- ===== LOGIN PAGE ===== -->
+<!-- ===== LOGIN ===== -->
 <div class="page-section" id="page-login" style="display:none">
   <div class="auth-page">
     <div class="auth-box">
       <h2>Welcome back! 👋</h2>
       <p>Log in to your FeedHub account</p>
       <div class="auth-error" id="loginError"></div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="loginEmail" placeholder="you@example.com"/>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="loginPassword" placeholder="Your password"/>
-      </div>
+      <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com"/></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Your password"/></div>
       <button class="btn-auth" onclick="doLogin()">Log In</button>
-      <div class="auth-switch">
-        Don't have an account? <span onclick="showPage('register')">Sign up free</span>
-      </div>
+      <div class="auth-switch">Don't have an account? <span onclick="showPage('register')">Sign up free</span></div>
     </div>
   </div>
 </div>
 
-<!-- ===== REGISTER PAGE ===== -->
+<!-- ===== REGISTER ===== -->
 <div class="page-section" id="page-register" style="display:none">
   <div class="auth-page">
     <div class="auth-box">
       <h2>Create Account 🚀</h2>
       <p>Join FeedHub and follow your favorite feeds</p>
       <div class="auth-error" id="registerError"></div>
-      <div class="form-group">
-        <label>Username</label>
-        <input type="text" id="regUsername" placeholder="Choose a username"/>
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="regEmail" placeholder="you@example.com"/>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="regPassword" placeholder="Create a password"/>
-      </div>
+      <div class="form-group"><label>Username</label><input type="text" id="regUsername" placeholder="Choose a username"/></div>
+      <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="you@example.com"/></div>
+      <div class="form-group"><label>Password</label><input type="password" id="regPassword" placeholder="Create a password"/></div>
       <button class="btn-auth" onclick="doRegister()">Create Account</button>
-      <div class="auth-switch">
-        Already have an account? <span onclick="showPage('login')">Log in</span>
-      </div>
+      <div class="auth-switch">Already have an account? <span onclick="showPage('login')">Log in</span></div>
     </div>
   </div>
 </div>
 
 <script>
+// ===== LOADING =====
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const overlay = document.getElementById('loadingOverlay');
+    overlay.classList.add('hidden');
+    setTimeout(() => overlay.style.display = 'none', 500);
+  }, 800);
+});
+
+// ===== DARK MODE =====
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('darkMode', isDark);
+}
+if (localStorage.getItem('darkMode') === 'true') {
+  document.body.classList.add('dark');
+  document.getElementById('darkToggle').textContent = '☀️';
+}
+
 // ===== PAGE NAVIGATION =====
-function showPage(page) {
+function showPage(page, skipClear) {
   document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none');
   document.getElementById('page-' + page).style.display = 'block';
   document.querySelectorAll('.nav-links li span, .nav-links li a').forEach(a => a.classList.remove('active'));
   const navEl = document.getElementById('nav-' + page);
   if (navEl) navEl.classList.add('active');
-  // Show/hide back button
-  const backBtn = document.getElementById('backBtn');
-  if (page === 'home') {
-    backBtn.style.display = 'none';
-  } else {
-    backBtn.style.display = 'flex';
-  }
   window.scrollTo(0, 0);
+  // Always clear hero search
+  const heroSearch = document.getElementById('heroSearch');
+  if (heroSearch) heroSearch.value = '';
+  if (!skipClear) {
+    ['blogSearch','podSearch','ytSearch','rssSearch'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    filterFeeds('blog','');
+    filterFeeds('podcast','');
+    filterFeeds('youtube','');
+    filterFeeds('rss','');
+  }
   updateCounts();
 }
 
-function goBack() {
-  showPage('home');
-}
-
-// ===== SEARCH =====
+// ===== HERO SEARCH =====
 function heroSearchGo() {
   const q = document.getElementById('heroSearch').value.trim().toLowerCase();
-  if (q) {
-    showPage('blogs');
-    document.getElementById('blogSearch').value = q;
-    filterFeeds('blog');
+  if (!q) return;
+  const pageMap = {blog:'blogs', podcast:'podcasts', youtube:'youtube', rss:'rss'};
+  const searchMap = {blog:'blogSearch', podcast:'podSearch', youtube:'ytSearch', rss:'rssSearch'};
+  const gridMap = {blog:'blogGrid', podcast:'podGrid', youtube:'ytGrid', rss:'rssGrid'};
+  for (const type of ['blog','podcast','youtube','rss']) {
+    const grid = document.getElementById(gridMap[type]);
+    if (!grid) continue;
+    const cards = grid.querySelectorAll('.feed-card');
+    for (const card of cards) {
+      if ((card.dataset.name || '').includes(q)) {
+        // Navigate without clearing search
+        document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none');
+        document.getElementById('page-' + pageMap[type]).style.display = 'block';
+        document.querySelectorAll('.nav-links li span, .nav-links li a').forEach(a => a.classList.remove('active'));
+        const navEl = document.getElementById('nav-' + pageMap[type]);
+        if (navEl) navEl.classList.add('active');
+        window.scrollTo(0, 0);
+        // Set search and filter
+        document.getElementById(searchMap[type]).value = q;
+        filterFeeds(type);
+        updateCounts();
+        return;
+      }
+    }
   }
+  // Not found — default to blogs
+  showPage('blogs', true);
+  document.getElementById('blogSearch').value = q;
+  filterFeeds('blog');
 }
 
 // ===== FILTER FEEDS =====
 function filterFeeds(type, category) {
-  const searchMap = { blog: 'blogSearch', podcast: 'podSearch', youtube: 'ytSearch', rss: 'rssSearch' };
-  const gridMap = { blog: 'blogGrid', podcast: 'podGrid', youtube: 'ytGrid', rss: 'rssGrid' };
-  const noResultsMap = { blog: 'blogNoResults', podcast: 'podNoResults', youtube: 'ytNoResults', rss: 'rssNoResults' };
-  const countMap = { blog: 'blogCount', podcast: 'podCount', youtube: 'ytCount', rss: 'rssCount' };
+  const searchMap = {blog:'blogSearch', podcast:'podSearch', youtube:'ytSearch', rss:'rssSearch'};
+  const gridMap = {blog:'blogGrid', podcast:'podGrid', youtube:'ytGrid', rss:'rssGrid'};
+  const noResultsMap = {blog:'blogNoResults', podcast:'podNoResults', youtube:'ytNoResults', rss:'rssNoResults'};
+  const countMap = {blog:'blogCount', podcast:'podCount', youtube:'ytCount', rss:'rssCount'};
 
   const searchVal = document.getElementById(searchMap[type])?.value.toLowerCase() || '';
   const grid = document.getElementById(gridMap[type]);
   if (!grid) return;
 
-  // Update active chip
   if (category !== undefined) {
     const chips = grid.closest('.content-area').querySelectorAll('.chip');
     chips.forEach(c => {
       c.classList.remove('active');
       if (category === '' && c.textContent.trim() === 'All') c.classList.add('active');
-      else if (c.textContent.includes(category)) c.classList.add('active');
+      else if (category && c.textContent.includes(category)) c.classList.add('active');
     });
   }
 
   const activeChip = grid.closest('.content-area').querySelector('.chip.active');
-  const activeCat = activeChip ? activeChip.dataset.cat || '' : '';
-  const filterCat = category !== undefined ? category : activeCat;
+  const filterCat = category !== undefined ? category : (activeChip?.dataset.cat || '');
 
   const cards = grid.querySelectorAll('.feed-card');
   let visible = 0;
@@ -991,31 +872,21 @@ function filterFeeds(type, category) {
     const cat = card.dataset.cat || '';
     const matchSearch = !searchVal || name.includes(searchVal);
     const matchCat = !filterCat || cat === filterCat;
-    if (matchSearch && matchCat) {
-      card.style.display = 'flex';
-      visible++;
-    } else {
-      card.style.display = 'none';
-    }
+    card.style.display = (matchSearch && matchCat) ? 'flex' : 'none';
+    if (matchSearch && matchCat) visible++;
   });
 
   const countEl = document.getElementById(countMap[type]);
   if (countEl) countEl.textContent = `Showing ${visible} of ${cards.length} results`;
-
   const noResults = document.getElementById(noResultsMap[type]);
   if (noResults) noResults.style.display = visible === 0 ? 'block' : 'none';
-}
-
-function filterBlog(category) {
-  const chips = document.querySelectorAll('#blogGrid')?.closest ? document.querySelectorAll('#page-blogs .chip') : [];
-  filterFeeds('blog', category);
 }
 
 function updateCounts() {
   ['blog','podcast','youtube','rss'].forEach(t => filterFeeds(t));
 }
 
-// ===== MY FEEDS TABS =====
+// ===== MY FEEDS =====
 function mfShow(section) {
   ['articles','all','blogs','podcasts','youtube','rss'].forEach(s => {
     document.getElementById('mf-section-' + s).style.display = 'none';
@@ -1027,12 +898,17 @@ function mfShow(section) {
 
 function mfFilter() {
   const q = document.getElementById('mfSearch').value.toLowerCase();
-  document.querySelectorAll('#mf-section-all .followed-feed-card').forEach(card => {
-    card.style.display = card.dataset.name.includes(q) ? 'flex' : 'none';
+  document.querySelectorAll('#mf-section-articles .article-card').forEach(card => {
+    const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
+    const source = card.querySelector('.article-source')?.textContent.toLowerCase() || '';
+    card.style.display = (title.includes(q) || source.includes(q)) ? 'block' : 'none';
+  });
+  document.querySelectorAll('#mfAllGrid .followed-feed-card').forEach(card => {
+    card.style.display = (card.dataset.name || '').includes(q) ? 'flex' : 'none';
   });
 }
 
-// ===== FOLLOW / UNFOLLOW =====
+// ===== FOLLOW =====
 function toggleFollow(feedId, btn) {
   fetch('/follow/' + feedId, { method: 'POST' })
     .then(r => r.json())
@@ -1040,12 +916,13 @@ function toggleFollow(feedId, btn) {
       if (data.status === 'followed') {
         btn.textContent = '✓ Following';
         btn.classList.add('following');
-        showToast('✅ Added to My Feeds!');
+        showToastWithLink('✅ Added! View in My Feeds →');
       } else {
         btn.textContent = '+ Follow';
         btn.classList.remove('following');
         showToast('Removed from My Feeds');
       }
+      refreshCounts();
     });
 }
 
@@ -1054,31 +931,42 @@ function unfollowFeed(feedId, btn) {
     .then(r => r.json())
     .then(data => {
       if (data.status === 'unfollowed') {
-        btn.closest('.followed-feed-card').remove();
+        const card = btn.closest('.followed-feed-card');
+        card.style.transition = 'all 0.3s';
+        card.style.opacity = '0';
+        card.style.transform = 'translateX(20px)';
+        setTimeout(() => card.remove(), 300);
         showToast('Removed from My Feeds');
+        refreshCounts();
       }
     });
 }
 
-// ===== LOGIN / REGISTER =====
+function refreshCounts() {
+  fetch('/api/counts')
+    .then(r => r.json())
+    .then(data => {
+      const set = (id, val) => { const el = document.querySelector('#' + id + ' .mf-count'); if (el) el.textContent = val; };
+      set('mf-all', data.total);
+      set('mf-blogs', data.blogs);
+      set('mf-podcasts', data.podcasts);
+      set('mf-youtube', data.youtube);
+      set('mf-rss', data.rss);
+      set('mf-articles', data.articles);
+    }).catch(() => {});
+}
+
+// ===== LOGIN/REGISTER =====
 function doLogin() {
   const email = document.getElementById('loginEmail').value;
   const password = document.getElementById('loginPassword').value;
   const errEl = document.getElementById('loginError');
-  fetch('/api/login', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({email, password})
-  })
-  .then(r => r.json())
-  .then(data => {
-    if (data.success) {
-      window.location.reload();
-    } else {
-      errEl.textContent = data.message;
-      errEl.style.display = 'block';
-    }
-  });
+  fetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email,password}) })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) { window.location.reload(); }
+      else { errEl.textContent = data.message; errEl.style.display = 'block'; }
+    });
 }
 
 function doRegister() {
@@ -1086,32 +974,28 @@ function doRegister() {
   const email = document.getElementById('regEmail').value;
   const password = document.getElementById('regPassword').value;
   const errEl = document.getElementById('registerError');
-  fetch('/api/register', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({username, email, password})
-  })
-  .then(r => r.json())
-  .then(data => {
-    if (data.success) {
-      showToast('✅ Account created! Please log in.');
-      showPage('login');
-    } else {
-      errEl.textContent = data.message;
-      errEl.style.display = 'block';
-    }
-  });
+  fetch('/api/register', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,email,password}) })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) { showToast('✅ Account created! Please log in.'); showPage('login'); }
+      else { errEl.textContent = data.message; errEl.style.display = 'block'; }
+    });
 }
 
 // ===== TOAST =====
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// Init counts on load
+function showToastWithLink(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = `<span onclick="showPage('myfeeds')" style="cursor:pointer;text-decoration:underline">${msg}</span>`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+
 updateCounts();
 </script>
 </body>

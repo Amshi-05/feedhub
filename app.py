@@ -21,7 +21,9 @@ def get_cached_articles(feeds):
             parsed = feedparser.parse(feed.url)
             feed_articles = []
             for entry in parsed.entries[:4]:
+                import re
                 summary = entry.get('summary', '')
+                summary = re.sub(r'<[^>]+>', '', summary)  # Remove HTML tags
                 if len(summary) > 250:
                     summary = summary[:250] + '...'
                 feed_articles.append({
@@ -80,8 +82,7 @@ def load_user(user_id):
 # ===== ROUTES =====
 @app.route("/")
 def home():
-    return render_template("index.html")
-
+    return redirect(url_for("main_app"))
 @app.route("/app")
 def main_app():
     feeds_blog = Feed.query.filter_by(feed_type="blog").all()
@@ -363,7 +364,7 @@ def seed_data():
         Feed(name="Science Daily", description="Latest science research news", url="https://www.sciencedaily.com/rss/all.xml", website="https://www.sciencedaily.com", category="Science", feed_type="blog"),
         Feed(name="Phys.org", description="Physics and technology news", url="https://phys.org/rss-feed/", website="https://phys.org", category="Science", feed_type="blog"),
 
-        # BLOGS - Design
+        # BLOGS - Design 
         Feed(name="Smashing Magazine", description="Web design and development", url="https://www.smashingmagazine.com/feed", website="https://www.smashingmagazine.com", category="Design", feed_type="blog"),
         Feed(name="CSS-Tricks", description="CSS and frontend web design tips", url="https://css-tricks.com/feed", website="https://css-tricks.com", category="Design", feed_type="blog"),
         Feed(name="Designmodo", description="Web design news and tutorials", url="https://designmodo.com/feed", website="https://designmodo.com", category="Design", feed_type="blog"),
@@ -425,8 +426,21 @@ def seed_data():
     db.session.bulk_save_objects(feeds)
     db.session.commit()
     print(f"Seeded {len(feeds)} feeds!")
-
-# ===== RUN =====
+@app.route("/api/counts")
+@login_required
+def api_counts():
+    blogs = [f for f in current_user.followed if f.feed_type == "blog"]
+    podcasts = [f for f in current_user.followed if f.feed_type == "podcast"]
+    youtube = [f for f in current_user.followed if f.feed_type == "youtube"]
+    rss = [f for f in current_user.followed if f.feed_type == "rss"]
+    return jsonify({
+        "total": len(current_user.followed),
+        "blogs": len(blogs),
+        "podcasts": len(podcasts),
+        "youtube": len(youtube),
+        "rss": len(rss),
+        "articles": len(blogs) + len(rss)
+    })
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
