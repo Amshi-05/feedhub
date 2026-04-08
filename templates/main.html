@@ -725,7 +725,7 @@ body.dark .dark-toggle { background: #2d2d4e; }
     <div class="dstat"><div class="dstat-icon">📡</div><div class="dstat-info"><h3>{{ followed_rss|length }}</h3><p>RSS Feeds</p></div></div>
   </div>
   <div class="dash-content">
-    {% if total == 0 %}
+    {% if followed_blogs|length == 0 and followed_podcasts|length == 0 and followed_youtube|length == 0 and followed_rss|length == 0 %}
     <div class="empty-state"><div class="icon">🚀</div><h3>Start following feeds!</h3><p>Follow blogs, podcasts, YouTube channels and RSS feeds to see them here.</p><button class="btn-explore" onclick="showPage('blogs')">Explore Feeds</button></div>
     {% else %}
     {% if followed_blogs %}<div class="dash-section-title">📝 Blogs ({{ followed_blogs|length }})</div><div class="followed-grid">{% for feed in followed_blogs %}<div class="followed-card"><div><h4>{{ feed.name }}</h4><p>{{ feed.category }}</p></div><a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a></div>{% endfor %}</div>{% endif %}
