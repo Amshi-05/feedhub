@@ -622,7 +622,7 @@ function filterFeeds(type, forceQ) {
   const pageIds = {blog:'blogs',podcast:'podcasts',youtube:'youtube',rss:'rss'};
   const q = forceQ !== undefined ? forceQ : (document.getElementById(searchIds[type])?.value.toLowerCase() || '');
   const activeChip = document.querySelector(`#page-${pageIds[type]} .chip.active`);
-  const cat = activeChip ? activeChip.textContent.replace(/[^\w\s]/g,'').trim() : 'all';
+  const cat = 'all';  
   const cards = document.querySelectorAll(`#${gridIds[type]} .feed-card`);
   let visible = 0;
   cards.forEach(card => {
