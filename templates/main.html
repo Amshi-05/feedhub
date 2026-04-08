@@ -6,7 +6,7 @@
 <title>FeedHub - Discover the Best Content</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Segoe UI',sans-serif; background:#f7f8fa; zoom:1.6; transition:background 0.3s,color 0.3s; }
+body { font-family:'Segoe UI',sans-serif; background:#f7f8fa; zoom:1.0; transition:background 0.3s,color 0.3s; }
 /* NAVBAR */
 .navbar { display:flex; align-items:center; justify-content:space-between; padding:0 24px; height:68px; background:#fff; border-bottom:2px solid #f0f0f0; position:sticky; top:0; z-index:999; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
 .logo { display:flex; align-items:center; gap:8px; font-size:22px; font-weight:800; color:#e05c2a; text-decoration:none; cursor:pointer; }
@@ -196,7 +196,7 @@ body.dark .form-group input { background:#2d2d40; border-color:#444; color:#fff;
 
 <!-- NAVBAR -->
 <nav class="navbar">
-  <div class="logo" onclick="showPage('home')"><span>FeedHub</span></div>
+  <div class="logo" onclick="showPage('home')">FeedHub 🏠 <span>FeedHub</span></div>
   <ul class="nav-links">
     <li><span id="nav-home" class="active" onclick="showPage('home')">🏠 Home</span></li>
     <li><span id="nav-blogs" onclick="showPage('blogs')">📝 Blogs</span></li>
@@ -236,13 +236,14 @@ body.dark .form-group input { background:#2d2d40; border-color:#444; color:#fff;
       <button onclick="heroSearchGo()">🔍 Search</button>
     </div>
     <div class="category-tags">
-      <span onclick="goToCategory('Technology')">💻 Technology</span>
-      <span onclick="goToCategory('Business')">💼 Business</span>
-      <span onclick="goToCategory('Science')">🔬 Science</span>
-      <span onclick="goToCategory('Design')">🎨 Design</span>
-      <span onclick="goToCategory('Education')">📚 Education</span>
-      <span onclick="goToCategory('Health')">❤️ Health</span>
+      <span onclick="showPage('blogs')">💻 Technology</span>
+      <span onclick="showPage('blogs')">💼 Business</span>
+      <span onclick="showPage('blogs')">🔬 Science</span>
+      <span onclick="showPage('blogs')">🎨 Design</span>
+      <span onclick="showPage('blogs')">📚 Education</span>
+      <span onclick="showPage('blogs')">❤️ Health</span>
     </div>
+  </div>
 
   <div class="featured-section">
     <h2 class="section-title">⭐ Featured Feeds</h2>
@@ -287,7 +288,7 @@ body.dark .form-group input { background:#2d2d40; border-color:#444; color:#fff;
   </div>
   <div class="search-filter">
     <input type="text" id="blogSearch" placeholder="Search blogs..." oninput="filterFeeds('blog')"/>
-    <span class="chip active" onclick="filterCategory(this,'blog','all')" data-cat="all">All</span>
+    <span class="chip active" onclick="filterCategory(this,'blog','all')">All</span>
     <span class="chip" onclick="filterCategory(this,'blog','Technology')">💻 Technology</span>
     <span class="chip" onclick="filterCategory(this,'blog','Business')">💼 Business</span>
     <span class="chip" onclick="filterCategory(this,'blog','Science')">🔬 Science</span>
@@ -571,55 +572,8 @@ body.dark .form-group input { background:#2d2d40; border-color:#444; color:#fff;
       <button class="btn-explore" onclick="showPage('blogs')">Explore Feeds</button>
     </div>
     <div id="dash-followed" style="display:none">
-  {% if followed_blogs %}
-  <h3 class="dash-section-title">📝 Blogs ({{ followed_blogs|length }})</h3>
-  <div class="followed-grid">
-    {% for feed in followed_blogs %}
-    <div class="followed-card">
-      <h4>{{ feed.name }}</h4>
-      <p>{{ feed.category }}</p>
-      <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
+      <p style="color:#888;font-size:15px;">Your followed feeds are showing in My Feeds section. Click <strong onclick="showPage('myfeeds')" style="color:#e05c2a;cursor:pointer">My Feeds</strong> to see all your content!</p>
     </div>
-    {% endfor %}
-  </div>
-  {% endif %}
-  {% if followed_podcasts %}
-  <h3 class="dash-section-title">🎙️ Podcasts ({{ followed_podcasts|length }})</h3>
-  <div class="followed-grid">
-    {% for feed in followed_podcasts %}
-    <div class="followed-card">
-      <h4>{{ feed.name }}</h4>
-      <p>{{ feed.category }}</p>
-      <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
-    </div>
-    {% endfor %}
-  </div>
-  {% endif %}
-  {% if followed_youtube %}
-  <h3 class="dash-section-title">▶️ YouTube ({{ followed_youtube|length }})</h3>
-  <div class="followed-grid">
-    {% for feed in followed_youtube %}
-    <div class="followed-card">
-      <h4>{{ feed.name }}</h4>
-      <p>{{ feed.category }}</p>
-      <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
-    </div>
-    {% endfor %}
-  </div>
-  {% endif %}
-  {% if followed_rss %}
-  <h3 class="dash-section-title">📡 RSS ({{ followed_rss|length }})</h3>
-  <div class="followed-grid">
-    {% for feed in followed_rss %}
-    <div class="followed-card">
-      <h4>{{ feed.name }}</h4>
-      <p>{{ feed.category }}</p>
-      <a href="{{ feed.website or feed.url }}" target="_blank" class="btn-visit-sm">Visit</a>
-    </div>
-    {% endfor %}
-  </div>
-  {% endif %}
-</div>
   </div>
   {% endif %}
 </div>
@@ -668,7 +622,7 @@ function filterFeeds(type, forceQ) {
   const pageIds = {blog:'blogs',podcast:'podcasts',youtube:'youtube',rss:'rss'};
   const q = forceQ !== undefined ? forceQ : (document.getElementById(searchIds[type])?.value.toLowerCase() || '');
   const activeChip = document.querySelector(`#page-${pageIds[type]} .chip.active`);
-  const cat = forceQ !== undefined ? 'all' : (activeChip ? activeChip.dataset.cat || 'all' : 'all');  
+  const cat = activeChip ? activeChip.textContent.replace(/[^\w\s]/g,'').trim() : 'all';
   const cards = document.querySelectorAll(`#${gridIds[type]} .feed-card`);
   let visible = 0;
   cards.forEach(card => {
@@ -689,20 +643,7 @@ function filterCategory(el, type, cat) {
   const pageIds = {blog:'blogs',podcast:'podcasts',youtube:'youtube',rss:'rss'};
   document.querySelectorAll(`#page-${pageIds[type]} .chip`).forEach(c => c.classList.remove('active'));
   el.classList.add('active');
-  el.dataset.cat = cat;
-  // Filter by category
-  const gridIds = {blog:'blogGrid',podcast:'podGrid',youtube:'ytGrid',rss:'rssGrid'};
-  const cards = document.querySelectorAll(`#${gridIds[type]} .feed-card`);
-  let visible = 0;
-  cards.forEach(card => {
-    const cardCat = card.dataset.category || '';
-    const show = cat === 'all' || cardCat === cat;
-    card.style.display = show ? 'block' : 'none';
-    if (show) visible++;
-  });
-  const countIds = {blog:'blogCount',podcast:'podCount',youtube:'ytCount',rss:'rssCount'};
-  const countEl = document.getElementById(countIds[type]);
-  if (countEl) countEl.textContent = `Showing ${visible} of ${cards.length} results`;
+  filterFeeds(type);
 }
 
 function heroSearchGo() {
@@ -771,57 +712,16 @@ function refreshCounts() {
 }
 
 function refreshDashboard() {
-  fetch('/api/dashboard-data')
+  fetch('/api/counts')
     .then(r => r.json())
     .then(data => {
-      document.getElementById('dash-total').textContent = data.total;
-      document.getElementById('dash-blogs').textContent = data.blogs;
-      document.getElementById('dash-podcasts').textContent = data.podcasts;
-      document.getElementById('dash-youtube').textContent = data.youtube;
-      document.getElementById('dash-rss').textContent = data.rss;
+      const ids = {'dash-total':data.total,'dash-blogs':data.blogs,'dash-podcasts':data.podcasts,'dash-youtube':data.youtube,'dash-rss':data.rss};
+      Object.entries(ids).forEach(([id,val]) => { const el = document.getElementById(id); if(el) el.textContent = val; });
       const empty = document.getElementById('dash-empty');
       const followed = document.getElementById('dash-followed');
-      if (data.total > 0) {
-        if(empty) empty.style.display='none';
-        if(followed) {
-          followed.style.display='block';
-          let html = '';
-          if(data.blog_feeds.length) {
-            html += `<h3 class="dash-section-title">📝 Blogs (${data.blog_feeds.length})</h3><div class="followed-grid">`;
-            data.blog_feeds.forEach(f => { html += `<div class="followed-card"><h4>${f.name}</h4><p>${f.category}</p><a href="${f.website}" target="_blank" class="btn-visit-sm">Visit</a></div>`; });
-            html += '</div>';
-          }
-          if(data.podcast_feeds.length) {
-            html += `<h3 class="dash-section-title">🎙️ Podcasts (${data.podcast_feeds.length})</h3><div class="followed-grid">`;
-            data.podcast_feeds.forEach(f => { html += `<div class="followed-card"><h4>${f.name}</h4><p>${f.category}</p><a href="${f.website}" target="_blank" class="btn-visit-sm">Visit</a></div>`; });
-            html += '</div>';
-          }
-          if(data.youtube_feeds.length) {
-            html += `<h3 class="dash-section-title">▶️ YouTube (${data.youtube_feeds.length})</h3><div class="followed-grid">`;
-            data.youtube_feeds.forEach(f => { html += `<div class="followed-card"><h4>${f.name}</h4><p>${f.category}</p><a href="${f.website}" target="_blank" class="btn-visit-sm">Visit</a></div>`; });
-            html += '</div>';
-          }
-          if(data.rss_feeds.length) {
-            html += `<h3 class="dash-section-title">📡 RSS (${data.rss_feeds.length})</h3><div class="followed-grid">`;
-            data.rss_feeds.forEach(f => { html += `<div class="followed-card"><h4>${f.name}</h4><p>${f.category}</p><a href="${f.website}" target="_blank" class="btn-visit-sm">Visit</a></div>`; });
-            html += '</div>';
-          }
-          followed.innerHTML = html;
-        }
-      } else {
-        if(empty) empty.style.display='block';
-        if(followed) followed.style.display='none';
-      }
+      if (data.total > 0) { if(empty) empty.style.display='none'; if(followed) followed.style.display='block'; }
+      else { if(empty) empty.style.display='block'; if(followed) followed.style.display='none'; }
     }).catch(()=>{});
-}
-function goToCategory(cat) {
-  showPage('blogs');
-  const chips = document.querySelectorAll('#page-blogs .chip');
-  chips.forEach(c => {
-    c.classList.remove('active');
-    if (c.textContent.includes(cat)) c.classList.add('active');
-  });
-  filterCategory(document.querySelector(`#page-blogs .chip.active`), 'blog', cat);
 }
 
 function showMfSection(section, el) {
@@ -858,7 +758,64 @@ function showToastWithLink(msg) {
   setTimeout(() => t.classList.remove('show'), 4000);
 }
 
+function goToCategory(cat) {
+  showPage('blogs');
+  setTimeout(() => {
+    const chips = document.querySelectorAll('#page-blogs .chip');
+    chips.forEach(c => c.classList.remove('active'));
+    chips.forEach(c => {
+      if (c.textContent.includes(cat)) {
+        c.classList.add('active');
+        filterCategory(c, 'blog', cat);
+      }
+    });
+  }, 50);
+}
+
+function refreshDashboard() {
+  fetch('/api/dashboard-data')
+    .then(r => r.json())
+    .then(data => {
+      const ids = {'dash-total':data.total,'dash-blogs':data.blogs,'dash-podcasts':data.podcasts,'dash-youtube':data.youtube,'dash-rss':data.rss};
+      Object.entries(ids).forEach(([id,val]) => { const el = document.getElementById(id); if(el) el.textContent = val; });
+      const empty = document.getElementById('dash-empty');
+      const followed = document.getElementById('dash-followed');
+      if (data.total > 0) {
+        if(empty) empty.style.display='none';
+        if(followed) {
+          followed.style.display='block';
+          let html = '';
+          if(data.blog_feeds.length) {
+            html += `<h3 class="dash-section-title">📝 Blogs (${data.blog_feeds.length})</h3><div class="followed-grid">`;
+            data.blog_feeds.forEach(f => { html += `<div class="followed-card"><h4>${f.name}</h4><p>${f.category}</p><a href="${f.website}" target="_blank" class="btn-visit-sm">Visit</a></div>`; });
+            html += '</div>';
+          }
+          if(data.podcast_feeds.length) {
+            html += `<h3 class="dash-section-title">🎙️ Podcasts (${data.podcast_feeds.length})</h3><div class="followed-grid">`;
+            data.podcast_feeds.forEach(f => { html += `<div class="followed-card"><h4>${f.name}</h4><p>${f.category}</p><a href="${f.website}" target="_blank" class="btn-visit-sm">Visit</a></div>`; });
+            html += '</div>';
+          }
+          if(data.youtube_feeds.length) {
+            html += `<h3 class="dash-section-title">▶️ YouTube (${data.youtube_feeds.length})</h3><div class="followed-grid">`;
+            data.youtube_feeds.forEach(f => { html += `<div class="followed-card"><h4>${f.name}</h4><p>${f.category}</p><a href="${f.website}" target="_blank" class="btn-visit-sm">Visit</a></div>`; });
+            html += '</div>';
+          }
+          if(data.rss_feeds.length) {
+            html += `<h3 class="dash-section-title">📡 RSS (${data.rss_feeds.length})</h3><div class="followed-grid">`;
+            data.rss_feeds.forEach(f => { html += `<div class="followed-card"><h4>${f.name}</h4><p>${f.category}</p><a href="${f.website}" target="_blank" class="btn-visit-sm">Visit</a></div>`; });
+            html += '</div>';
+          }
+          followed.innerHTML = html;
+        }
+      } else {
+        if(empty) empty.style.display='block';
+        if(followed) followed.style.display='none';
+      }
+    }).catch(()=>{});
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.feed-card').forEach(c => c.style.display = 'block');
   refreshCounts();
   refreshDashboard();
 });
