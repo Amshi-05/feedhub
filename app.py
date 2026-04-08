@@ -405,6 +405,11 @@ def toggle_admin(user_id):
     user.is_admin = not user.is_admin
     db.session.commit()
     return redirect(url_for("admin"))
-
+@app.route("/reset-db")
+def reset_db():
+    db.drop_all()
+    db.create_all()
+    seed_data()
+    return "Database reset done!"
 if __name__ == "__main__":
     app.run(debug=True)
