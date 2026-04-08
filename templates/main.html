@@ -236,14 +236,13 @@ body.dark .form-group input { background:#2d2d40; border-color:#444; color:#fff;
       <button onclick="heroSearchGo()">🔍 Search</button>
     </div>
     <div class="category-tags">
-      <span onclick="showPage('blogs')">💻 Technology</span>
-      <span onclick="showPage('blogs')">💼 Business</span>
-      <span onclick="showPage('blogs')">🔬 Science</span>
-      <span onclick="showPage('blogs')">🎨 Design</span>
-      <span onclick="showPage('blogs')">📚 Education</span>
-      <span onclick="showPage('blogs')">❤️ Health</span>
+      <span onclick="goToCategory('Technology')">💻 Technology</span>
+      <span onclick="goToCategory('Business')">💼 Business</span>
+      <span onclick="goToCategory('Science')">🔬 Science</span>
+      <span onclick="goToCategory('Design')">🎨 Design</span>
+      <span onclick="goToCategory('Education')">📚 Education</span>
+      <span onclick="goToCategory('Health')">❤️ Health</span>
     </div>
-  </div>
 
   <div class="featured-section">
     <h2 class="section-title">⭐ Featured Feeds</h2>
@@ -814,6 +813,15 @@ function refreshDashboard() {
         if(followed) followed.style.display='none';
       }
     }).catch(()=>{});
+}
+function goToCategory(cat) {
+  showPage('blogs');
+  const chips = document.querySelectorAll('#page-blogs .chip');
+  chips.forEach(c => {
+    c.classList.remove('active');
+    if (c.textContent.includes(cat)) c.classList.add('active');
+  });
+  filterCategory(document.querySelector(`#page-blogs .chip.active`), 'blog', cat);
 }
 
 function showMfSection(section, el) {
