@@ -288,7 +288,7 @@ body.dark .form-group input { background:#2d2d40; border-color:#444; color:#fff;
   </div>
   <div class="search-filter">
     <input type="text" id="blogSearch" placeholder="Search blogs..." oninput="filterFeeds('blog')"/>
-    <span class="chip active" onclick="filterCategory(this,'blog','all')">All</span>
+    <span class="chip active" onclick="filterCategory(this,'blog','all')" data-cat="all">All</span>
     <span class="chip" onclick="filterCategory(this,'blog','Technology')">💻 Technology</span>
     <span class="chip" onclick="filterCategory(this,'blog','Business')">💼 Business</span>
     <span class="chip" onclick="filterCategory(this,'blog','Science')">🔬 Science</span>
@@ -622,7 +622,7 @@ function filterFeeds(type, forceQ) {
   const pageIds = {blog:'blogs',podcast:'podcasts',youtube:'youtube',rss:'rss'};
   const q = forceQ !== undefined ? forceQ : (document.getElementById(searchIds[type])?.value.toLowerCase() || '');
   const activeChip = document.querySelector(`#page-${pageIds[type]} .chip.active`);
-  const cat = 'all';  
+  const cat = forceQ !== undefined ? 'all' : (activeChip ? activeChip.dataset.cat || 'all' : 'all');  
   const cards = document.querySelectorAll(`#${gridIds[type]} .feed-card`);
   let visible = 0;
   cards.forEach(card => {
@@ -643,7 +643,20 @@ function filterCategory(el, type, cat) {
   const pageIds = {blog:'blogs',podcast:'podcasts',youtube:'youtube',rss:'rss'};
   document.querySelectorAll(`#page-${pageIds[type]} .chip`).forEach(c => c.classList.remove('active'));
   el.classList.add('active');
-  filterFeeds(type);
+  el.dataset.cat = cat;
+  // Filter by category
+  const gridIds = {blog:'blogGrid',podcast:'podGrid',youtube:'ytGrid',rss:'rssGrid'};
+  const cards = document.querySelectorAll(`#${gridIds[type]} .feed-card`);
+  let visible = 0;
+  cards.forEach(card => {
+    const cardCat = card.dataset.category || '';
+    const show = cat === 'all' || cardCat === cat;
+    card.style.display = show ? 'block' : 'none';
+    if (show) visible++;
+  });
+  const countIds = {blog:'blogCount',podcast:'podCount',youtube:'ytCount',rss:'rssCount'};
+  const countEl = document.getElementById(countIds[type]);
+  if (countEl) countEl.textContent = `Showing ${visible} of ${cards.length} results`;
 }
 
 function heroSearchGo() {
