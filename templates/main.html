@@ -772,15 +772,47 @@ function refreshCounts() {
 }
 
 function refreshDashboard() {
-  fetch('/api/counts')
+  fetch('/api/dashboard-data')
     .then(r => r.json())
     .then(data => {
-      const ids = {'dash-total':data.total,'dash-blogs':data.blogs,'dash-podcasts':data.podcasts,'dash-youtube':data.youtube,'dash-rss':data.rss};
-      Object.entries(ids).forEach(([id,val]) => { const el = document.getElementById(id); if(el) el.textContent = val; });
+      document.getElementById('dash-total').textContent = data.total;
+      document.getElementById('dash-blogs').textContent = data.blogs;
+      document.getElementById('dash-podcasts').textContent = data.podcasts;
+      document.getElementById('dash-youtube').textContent = data.youtube;
+      document.getElementById('dash-rss').textContent = data.rss;
       const empty = document.getElementById('dash-empty');
       const followed = document.getElementById('dash-followed');
-      if (data.total > 0) { if(empty) empty.style.display='none'; if(followed) followed.style.display='block'; }
-      else { if(empty) empty.style.display='block'; if(followed) followed.style.display='none'; }
+      if (data.total > 0) {
+        if(empty) empty.style.display='none';
+        if(followed) {
+          followed.style.display='block';
+          let html = '';
+          if(data.blog_feeds.length) {
+            html += `<h3 class="dash-section-title">📝 Blogs (${data.blog_feeds.length})</h3><div class="followed-grid">`;
+            data.blog_feeds.forEach(f => { html += `<div class="followed-card"><h4>${f.name}</h4><p>${f.category}</p><a href="${f.website}" target="_blank" class="btn-visit-sm">Visit</a></div>`; });
+            html += '</div>';
+          }
+          if(data.podcast_feeds.length) {
+            html += `<h3 class="dash-section-title">🎙️ Podcasts (${data.podcast_feeds.length})</h3><div class="followed-grid">`;
+            data.podcast_feeds.forEach(f => { html += `<div class="followed-card"><h4>${f.name}</h4><p>${f.category}</p><a href="${f.website}" target="_blank" class="btn-visit-sm">Visit</a></div>`; });
+            html += '</div>';
+          }
+          if(data.youtube_feeds.length) {
+            html += `<h3 class="dash-section-title">▶️ YouTube (${data.youtube_feeds.length})</h3><div class="followed-grid">`;
+            data.youtube_feeds.forEach(f => { html += `<div class="followed-card"><h4>${f.name}</h4><p>${f.category}</p><a href="${f.website}" target="_blank" class="btn-visit-sm">Visit</a></div>`; });
+            html += '</div>';
+          }
+          if(data.rss_feeds.length) {
+            html += `<h3 class="dash-section-title">📡 RSS (${data.rss_feeds.length})</h3><div class="followed-grid">`;
+            data.rss_feeds.forEach(f => { html += `<div class="followed-card"><h4>${f.name}</h4><p>${f.category}</p><a href="${f.website}" target="_blank" class="btn-visit-sm">Visit</a></div>`; });
+            html += '</div>';
+          }
+          followed.innerHTML = html;
+        }
+      } else {
+        if(empty) empty.style.display='block';
+        if(followed) followed.style.display='none';
+      }
     }).catch(()=>{});
 }
 

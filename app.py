@@ -348,6 +348,25 @@ def api_counts():
         "articles": len(blogs) + len(rss)
     })
 
+@app.route("/api/dashboard-data")
+@login_required
+def dashboard_data():
+    blogs = [f for f in current_user.followed if f.feed_type == "blog"]
+    podcasts = [f for f in current_user.followed if f.feed_type == "podcast"]
+    youtube = [f for f in current_user.followed if f.feed_type == "youtube"]
+    rss = [f for f in current_user.followed if f.feed_type == "rss"]
+    return jsonify({
+        "total": len(current_user.followed),
+        "blogs": len(blogs),
+        "podcasts": len(podcasts),
+        "youtube": len(youtube),
+        "rss": len(rss),
+        "blog_feeds": [{"name":f.name,"category":f.category,"website":f.website or f.url} for f in blogs],
+        "podcast_feeds": [{"name":f.name,"category":f.category,"website":f.website or f.url} for f in podcasts],
+        "youtube_feeds": [{"name":f.name,"category":f.category,"website":f.website or f.url} for f in youtube],
+        "rss_feeds": [{"name":f.name,"category":f.category,"website":f.website or f.url} for f in rss]
+    })
+
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
@@ -405,11 +424,6 @@ def toggle_admin(user_id):
     user.is_admin = not user.is_admin
     db.session.commit()
     return redirect(url_for("admin"))
-@app.route("/reset-db")
-def reset_db():
-    db.drop_all()
-    db.create_all()
-    seed_data()
-    return "Database reset done!"
+
 if __name__ == "__main__":
     app.run(debug=True)
